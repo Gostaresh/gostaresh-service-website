@@ -19,4 +19,5 @@ import {
   NDialogProvider,
   NNotificationProvider,
 } from "naive-ui";
+import "@/assets/css/main.css";
 </script>

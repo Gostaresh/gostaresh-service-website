@@ -1,25 +1,21 @@
 /* assets/css/main.css */
 @font-face {
   font-family: "IranSans";
-  src: url("/assets/fonts/iransans/IRANSans.woff2") format("woff2"),
-    url("/assets/fonts/iransans/IRANSans.woff") format("woff");
+  src: url("@/assets/fonts/IRANSans.woff2") format("woff2"),
+    url("@/assets/fonts/IRANSans.woff") format("woff");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html,
 body {
-  font-family: "IranSans", ui-sans-serif, system-ui;
   direction: rtl;
   background: #f6f8fb;
   color: #0f172a;
-}
-
-/* کمک به نمایش اعداد فارسی در متن‌های استاتیک */
-[data-fa-digits="true"] {
-  font-variant-numeric: lining-nums;
+  font-family: "IranSans", ui-sans-serif, system-ui;
 }
