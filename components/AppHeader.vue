@@ -1,7 +1,7 @@
 <template>
   <header class="bg-white/90 backdrop-blur border-b">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
+      <NuxtLink class="flex items-center gap-3 hover:text-sky-600" to="/">
         <img
           src="/brands/gs-warranty-logo.png"
           alt="گسترش سرویس"
@@ -10,7 +10,7 @@
         <div class="text-sm text-slate-500">
           گسترش سرویس — همیشه یک قدم جلوتر
         </div>
-      </div>
+      </NuxtLink>
       <nav class="flex items-center gap-4">
         <NuxtLink class="hover:text-sky-600" to="/">معرفی</NuxtLink>
         <NuxtLink class="hover:text-sky-600" to="/warranty/check"
