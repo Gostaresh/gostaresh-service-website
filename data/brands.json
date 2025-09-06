@@ -1,0 +1,6 @@
+[
+  { "name": "Lenovo", "logo": "/brands/lenovo.png" },
+  { "name": "ASUS", "logo": "/brands/asus.png" },
+  { "name": "HP", "logo": "/brands/hp.png" },
+  { "name": "Acer", "logo": "/brands/acer.png" }
+]

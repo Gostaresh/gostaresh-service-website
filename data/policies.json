@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "brand": "Lenovo",
+    "category": "Laptop",
+    "product": "IdeaPad Series",
+    "duration": { "value": 24, "unit": "month" },
+    "conditions": "آسیب فیزیکی/نفوذ مایعات شامل نمی‌شود"
+  },
+  {
+    "id": "2",
+    "brand": "ASUS",
+    "category": "Laptop",
+    "product": "ROG Series",
+    "duration": { "value": 24, "unit": "month" }
+  },
+  {
+    "id": "3",
+    "brand": "HP",
+    "category": "Laptop",
+    "product": "Pavilion",
+    "duration": { "value": 12, "unit": "month" }
+  },
+  {
+    "id": "4",
+    "brand": "Acer",
+    "category": "Laptop",
+    "product": "Aspire",
+    "duration": { "value": 18, "unit": "month" }
+  },
+  {
+    "id": "5",
+    "brand": "FDK",
+    "category": "SSD",
+    "product": "FDK SATA",
+    "duration": { "value": 1000, "unit": "day" }
+  }
+]
