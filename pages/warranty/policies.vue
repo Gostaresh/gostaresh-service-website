@@ -20,73 +20,71 @@
       <n-input v-model:value="q" placeholder="جستجو…" class="w-64" clearable />
     </div>
 
-    <n-data-table :columns="columns" :data="rows" :bordered="false" />
+    <n-data-table
+      :columns="columns"
+      :data="rows"
+      :bordered="false"
+      :pagination="pagination"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref, reactive, computed, watch } from "vue";
 import { NSelect, NInput, NDataTable } from "naive-ui";
-import { useJDate } from "~/composables/useJDate";
-const { j } = useJDate();
+import type { PaginationProps } from "naive-ui";
 
-const raw: any[] = [
-  {
-    id: "1",
-    brand: "Lenovo",
-    category: "Laptop",
-    product: "IdeaPad Series",
-    duration: { value: 24, unit: "month" },
-    conditions: "آسیب فیزیکی/نفوذ مایعات شامل نمی‌شود",
-  },
-  {
-    id: "2",
-    brand: "ASUS",
-    category: "Laptop",
-    product: "ROG Series",
-    duration: { value: 24, unit: "month" },
-  },
-  {
-    id: "3",
-    brand: "HP",
-    category: "Laptop",
-    product: "Pavilion",
-    duration: { value: 12, unit: "month" },
-  },
-  {
-    id: "4",
-    brand: "Acer",
-    category: "Laptop",
-    product: "Aspire",
-    duration: { value: 18, unit: "month" },
-  },
-  {
-    id: "5",
-    brand: "FDK",
-    category: "SSD",
-    product: "FDK SATA",
-    duration: { value: 1000, unit: "day" },
-  },
-];
+type Policy = {
+  id: string;
+  brand: string;
+  category: string;
+  product?: string;
+  duration: { value: number; unit: "month" | "day" };
+  conditions?: string;
+};
+
+/* ۱) داده را top-level await کن (فایل باید در public/data/policies.json باشد) */
+const raw = (await import("@/public/data/policies.json")).default as Policy[];
+
+/* نرمال‌سازی اختیاری چند برند که دو شکل نوشتار دارند */
+const normalizeBrand = (b: string) =>
+  (({ Kingstone: "Kingston", MIKROTIK: "Mikrotik" } as Record<string, string>)[
+    b
+  ] || b);
+
+/* ۲) فیلترها */
 const q = ref("");
 const brand = ref<string | null>(null);
 const category = ref<string | null>(null);
 
-const allBrands = Array.from(new Set(raw.map((r) => r.brand)));
-const allCats = Array.from(new Set(raw.map((r) => r.category)));
-
-const brandOptions = allBrands.map((b) => ({ label: b, value: b }));
-const categoryOptions = allCats.map((c) => ({ label: c, value: c }));
-
-const rows = computed(() =>
-  raw.filter(
-    (r) =>
-      (!brand.value || r.brand === brand.value) &&
-      (!category.value || r.category === category.value) &&
-      (!q.value || JSON.stringify(r).includes(q.value))
-  )
+const allBrands = computed(() =>
+  Array.from(new Set(raw.map((r) => normalizeBrand(r.brand)))).sort()
+);
+const allCats = computed(() =>
+  Array.from(new Set(raw.map((r) => r.category))).sort()
 );
 
+const brandOptions = computed(() =>
+  allBrands.value.map((b) => ({ label: b, value: b }))
+);
+const categoryOptions = computed(() =>
+  allCats.value.map((c) => ({ label: c, value: c }))
+);
+
+/* ۳) جستجو و فیلتر */
+const norm = (s: string) => s.toLowerCase();
+const rows = computed(() =>
+  raw
+    .map((r) => ({ ...r, brand: normalizeBrand(r.brand) }))
+    .filter(
+      (r) =>
+        (!brand.value || r.brand === brand.value) &&
+        (!category.value || r.category === category.value) &&
+        (!q.value || JSON.stringify(r).toLowerCase().includes(norm(q.value)))
+    )
+);
+
+/* ۴) ستون‌ها */
 const columns = [
   { title: "برند", key: "brand" },
   { title: "دسته", key: "category" },
@@ -94,12 +92,36 @@ const columns = [
   {
     title: "مدت",
     key: "duration",
-    render(row: any) {
+    render(row: Policy) {
       const u = row.duration.unit === "day" ? "روز" : "ماه";
       return `${row.duration.value} ${u}`;
     },
   },
-  { title: "شرایط/استثناها", key: "conditions" },
+  {
+    title: "شرایط/استثناها",
+    key: "conditions",
+    render(row: Policy) {
+      return row.conditions ?? "—";
+    },
+  },
 ];
 useSeoMeta({ title: "شرایط گارانتی برندها" });
+
+const pagination = reactive<PaginationProps>({
+  page: 1,
+  pageSize: 12, // اندازه‌ی پیش‌فرض
+  showSizePicker: true, // نمایش انتخاب‌گرِ page size
+  pageSizes: [10, 12, 20, 50, 100],
+  // رویدادهای کنترل:
+  onUpdatePage: (p) => (pagination.page = p),
+  onUpdatePageSize: (ps) => {
+    pagination.pageSize = ps;
+    pagination.page = 1; // بعد از تغییر سایز، برگرد صفحه به ۱
+  },
+});
+
+/* وقتی فیلترها عوض شدند، برو صفحه‌ی ۱ */
+watch([brand, category, q], () => {
+  pagination.page = 1;
+});
 </script>

@@ -18,7 +18,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      htmlAttrs: { lang: "fa", dir: "rtl" },
+      htmlAttrs: { lang: "fa" },
       titleTemplate: (t) =>
         t ? `${t} | گسترش سرویس` : "گسترش سرویس — گسترش سیستم ایران",
       link: [{ rel: "icon", href: "/brand/favicon.ico" }],
