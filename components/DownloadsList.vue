@@ -38,6 +38,8 @@ type DL = { id: string; title: string; file: string; updated?: string };
 const files = ref<DL[]>([]);
 
 onMounted(async () => {
-  files.value = (await import("@/public/data/downloads.json")) as DL[];
+  files.value = (
+    await import("@/public/data/downloads.json")
+  ).default as DL[];
 });
 </script>

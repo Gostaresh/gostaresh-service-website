@@ -85,9 +85,9 @@ const centers = ref<Center[]>([]);
 const q = ref("");
 
 onMounted(async () => {
-  centers.value = (await import(
-    "@/public/data/service-centers.json"
-  )) as Center[];
+  centers.value = (
+    await import("@/public/data/service-centers.json")
+  ).default as Center[];
 });
 
 const filtered = computed(() => {

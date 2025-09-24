@@ -32,7 +32,9 @@ const faqs = ref<QA[]>([]);
 const q = ref("");
 
 onMounted(async () => {
-  faqs.value = (await import("@/public/data/faq.json")) as QA[];
+  faqs.value = (
+    await import("@/public/data/faq.json")
+  ).default as QA[];
 });
 
 const filtered = computed(() => {

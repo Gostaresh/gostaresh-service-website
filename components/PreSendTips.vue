@@ -28,7 +28,9 @@ const tips = ref<string[]>([]);
 
 onMounted(async () => {
   try {
-    tips.value = (await import("@/public/data/pre-send-tips.json")) as string[];
+    tips.value = (
+      await import("@/public/data/pre-send-tips.json")
+    ).default as string[];
   } catch {
     tips.value = [];
   }
