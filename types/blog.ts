@@ -7,5 +7,6 @@ export interface BlogPost {
   readMinutes: number;
   tags: string[];
   hot?: boolean;
-  content: string[];
+  content: string;
 }
+

@@ -19,17 +19,6 @@
             {{ formatDate(post.date) }}
           </span>
           <span>{{ post.readMinutes }} دقیقه مطالعه</span>
-          <span v-if="post.tags.length" class="flex items-center gap-2">
-            <Icon name="ph:tag" size="14" class="text-slate-400" />
-            <span class="flex flex-wrap gap-2">
-              <span
-                v-for="tag in post.tags"
-                :key="tag"
-                class="rounded-full bg-sky-50 px-3 py-1 text-xs text-sky-600"
-                >{{ tag }}</span
-              >
-            </span>
-          </span>
         </div>
         <h1 class="text-3xl font-bold text-slate-800 leading-tight">
           {{ post.title }}
@@ -40,10 +29,25 @@
         <img :src="post.cover" :alt="post.title" class="w-full object-cover" />
       </div>
 
-      <div class="space-y-6 text-slate-700 leading-8">
-        <p v-for="(para, idx) in post.content" :key="idx">
-          {{ para }}
-        </p>
+      <div
+        v-if="post.content"
+        class="prose prose-slate max-w-none text-slate-700 leading-8"
+        v-html="post.content"
+      ></div>
+
+
+      <div v-if="post.tags.length" class="mt-8 flex flex-wrap items-center gap-3 text-xs md:text-sm text-slate-600">
+        <span class="flex items-center gap-2 font-medium">
+          <Icon name="ph:tag" size="16" class="text-slate-400" />
+          برچسب‌ها:
+        </span>
+        <span
+          v-for="tag in post.tags"
+          :key="tag"
+          class="rounded-full bg-sky-50 px-3 py-1 text-xs text-sky-600"
+        >
+          {{ tag }}
+        </span>
       </div>
     </article>
   </div>
@@ -69,9 +73,18 @@ if (!post.value) {
   });
 }
 
+const coverImage = computed(() => post.value?.cover || undefined);
+
 useSeoMeta({
   title: () => post.value?.title ?? "آموزش",
   description: () => post.value?.excerpt ?? "مطلب آموزشی گسترش سرویس",
+  ogTitle: () => post.value?.title ?? undefined,
+  ogDescription: () => post.value?.excerpt ?? undefined,
+  ogImage: () => coverImage.value,
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => post.value?.title ?? undefined,
+  twitterDescription: () => post.value?.excerpt ?? undefined,
+  twitterImage: () => coverImage.value,
 });
 
 const formatDate = (iso: string) =>

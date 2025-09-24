@@ -23,10 +23,7 @@
       >
         <NuxtLink :to="`/education/${post.slug}`" class="flex h-full flex-col">
           <div class="relative">
-            <div
-              v-if="post.cover"
-              class="h-40 w-full overflow-hidden"
-            >
+            <div v-if="post.cover" class="h-40 w-full overflow-hidden">
               <img
                 :src="post.cover"
                 :alt="post.title"
@@ -58,7 +55,9 @@
             <p class="text-sm text-slate-600 line-clamp-3">
               {{ post.excerpt }}
             </p>
-            <div class="mt-auto flex items-center justify-between text-xs text-slate-500">
+            <div
+              class="mt-auto flex items-center justify-between text-xs text-slate-500"
+            >
               <span>{{ post.readMinutes }} دقیقه مطالعه</span>
               <span class="inline-flex items-center gap-1 text-sky-600">
                 مطالعه
@@ -70,7 +69,10 @@
       </article>
     </div>
 
-    <div v-else class="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-6 text-center text-sm text-slate-500">
+    <div
+      v-else
+      class="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-6 text-center text-sm text-slate-500"
+    >
       هنوز محتوایی برای نمایش ثبت نشده است.
     </div>
   </section>
