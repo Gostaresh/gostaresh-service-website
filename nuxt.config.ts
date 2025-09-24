@@ -1,33 +1,41 @@
-// nuxt.config.ts
-import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
+
+const blogRoutes: string[] = (() => {
+  try {
+    const raw = readFileSync(new URL("./public/data/blogs.json", import.meta.url), "utf-8");
+    const data = JSON.parse(raw) as Array<{ slug?: string }>;
+    if (Array.isArray(data)) {
+      return data
+        .map((item) => (item && item.slug ? `/education/${item.slug}` : null))
+        .filter((route): route is string => Boolean(route));
+    }
+  } catch (error) {
+    console.warn("[nuxt.config] Failed to read blog routes for prerender", error);
+  }
+  return [];
+})();
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: true,
 
-  modules: ["@nuxtjs/tailwindcss", "@vueuse/nuxt", "@pinia/nuxt", "nuxt-icon"],
-
-  // مسیر CSS را ساده کن تا مشکل alias پیش نیاد
-  // css: ["~/assets/css/main.css"],
-
-  // (اختیاری) این aliasهای سراسری معمولاً لازم نیست؛ می‌تونی حذف‌شون کنی
-  // alias: {
-  //   '@': fileURLToPath(new URL('./', import.meta.url)),
-  //   '~': fileURLToPath(new URL('./', import.meta.url))
-  // },
+  modules: ["@nuxtjs/tailwindcss", "@vueuse/nuxt", "@pinia/nuxt", "@nuxt/icon"],
 
   app: {
     head: {
       htmlAttrs: { lang: "fa" },
       titleTemplate: (t) =>
-        t ? `${t} | گسترش سرویس` : "گسترش سرویس — گسترش سیستم ایران",
+        t ? `${t} | ع¯ط³طھط±ط´ ط³ط±ظˆغŒط³` : "ع¯ط³طھط±ط´ ط³ط±ظˆغŒط³ â€” ع¯ط³طھط±ط´ ط³غŒط³طھظ… ط§غŒط±ط§ظ†",
       link: [{ rel: "icon", href: "/brand/favicon.ico" }],
     },
   },
 
+  routeRules: {
+    "/education/**": { prerender: true },
+  },
+
   tailwindcss: { viewer: false },
 
-  // 🔧 مهم: این بسته‌ها را ترنسپایل کن تا ESM صحیح تولید شود
   build: {
     transpile: ["naive-ui", "vueuc", "vdirs", "vooks"],
   },
@@ -35,19 +43,21 @@ export default defineNuxtConfig({
   vite: {
     resolve: {
       alias: {
-        // فیکس Dayjs locale روی ویندوز/SSR
         "dayjs/locale/fa": "dayjs/locale/fa.js",
-        // (در صورت نیاز به بای‌پس نهایی vueuc، این را هم می‌توانی اضافه کنی:)
-        // 'vueuc': 'vueuc/es/index.js'
       },
     },
     ssr: {
-      // 🔧 مهم: اجبار به باندل این بسته‌ها در SSR
       noExternal: ["naive-ui", "vueuc", "vdirs", "vooks", "dayjs", "jalaliday"],
     },
-    // (اختیاری اما مفید برای ویندوز)
     optimizeDeps: {
       include: ["dayjs/locale/fa.js", "naive-ui", "vueuc", "vdirs", "vooks"],
+    },
+  },
+
+  nitro: {
+    prerender: {
+      routes: blogRoutes,
+      crawlLinks: true,
     },
   },
 });

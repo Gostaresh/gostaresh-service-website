@@ -1,18 +1,17 @@
-<template>
+﻿<template>
   <div class="relative" dir="rtl">
     <!-- HERO -->
     <section
       class="relative isolate mx-[calc(50%-50vw)] w-screen overflow-hidden"
       dir="rtl"
     >
-      <div class="h-[360px] md:h-[500px] xl:h-[600px]">
-        <img
-          src="/images/banners/banner.jpg"
-          alt="بنر خدمات گسترش سرویس"
-          class="absolute inset-0 z-0 h-full w-full object-cover object-[70%_40%]"
-        />
+      <div class="hero-pano" role="img" aria-label="بنر خدمات گسترش سرویس">
+        <div class="hero-pano-track">
+          <div class="hero-pano-slide"></div>
+          <div class="hero-pano-slide" aria-hidden="true"></div>
+        </div>
         <div
-          class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-b from-black/60 via-black/40 to-black/20 md:bg-gradient-to-l md:from-black/70 md:via-black/45 md:to-transparent"
+          class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-black/40 to-black/20 md:bg-gradient-to-l md:from-black/70 md:via-black/45 md:to-transparent"
         ></div>
       </div>
     </section>
@@ -128,9 +127,9 @@
           <div class="max-w-xl space-y-3">
             <h2 class="text-2xl font-semibold">پشتیبانی همیشه آماده است</h2>
             <p class="text-sm leading-7 text-white/90 md:text-base">
-              اگر برای ارسال دستگاه یا بررسی شرایط گارانتی نیاز به راهنمایی دارید،
-              تیم ما در تمام روزهای کاری کنار شماست. یکی از مسیرهای ارتباطی زیر را
-              انتخاب کنید.
+              اگر برای ارسال دستگاه یا بررسی شرایط گارانتی نیاز به راهنمایی
+              دارید، تیم ما در تمام روزهای کاری کنار شماست. یکی از مسیرهای
+              ارتباطی زیر را انتخاب کنید.
             </p>
           </div>
           <div
@@ -201,13 +200,16 @@ useSeoMeta({
   description: "گسترش سرویس — سامانهٔ استعلام وضعیت و شرایط گارانتی برندها",
 });
 
-const blogData = (await import("@/public/data/blogs.json")).default as BlogPost[];
-const quickContact = (await import("@/public/data/quick-contacts.json")).default as QuickContact;
+const blogData = (await import("@/public/data/blogs.json"))
+  .default as BlogPost[];
+const quickContact = (await import("@/public/data/quick-contacts.json"))
+  .default as QuickContact;
 
 const actionCards: ActionCard[] = [
   {
     title: "استعلام فوری گارانتی",
-    description: "شماره سریال دستگاه را ثبت کنید و نتیجه استعلام را در لحظه مشاهده کنید.",
+    description:
+      "شماره سریال دستگاه را ثبت کنید و نتیجه استعلام را در لحظه مشاهده کنید.",
     to: "/warranty/check",
     icon: "ph:magnifying-glass-duotone",
     buttonLabel: "شروع استعلام",
@@ -215,7 +217,8 @@ const actionCards: ActionCard[] = [
   },
   {
     title: "شرایط برندها",
-    description: "مدت و شرایط گارانتی هر برند را به تفکیک دسته‌بندی و محصولات بررسی کنید.",
+    description:
+      "مدت و شرایط گارانتی هر برند را به تفکیک دسته‌بندی و محصولات بررسی کنید.",
     to: "/warranty/policies",
     icon: "ph:clipboard-text-duotone",
     buttonLabel: "مشاهده شرایط",
@@ -223,7 +226,8 @@ const actionCards: ActionCard[] = [
   },
   {
     title: "آموزش و بلاگ",
-    description: "نکات کاربردی برای ارسال دستگاه، نگهداری بهتر و تازه‌ترین اخبار خدمات را بخوانید.",
+    description:
+      "نکات کاربردی برای ارسال دستگاه، نگهداری بهتر و تازه‌ترین اخبار خدمات را بخوانید.",
     to: "/education",
     icon: "ph:book-open-duotone",
     buttonLabel: "مطالعه مطالب",
@@ -238,8 +242,69 @@ const buttonClasses: Record<ActionCard["variant"], string> = {
 };
 
 const hotBlogs = computed(() =>
-  blogData
-    .filter((post) => post.hot)
-    .slice(0, 3)
+  blogData.filter((post) => post.hot).slice(0, 3)
 );
 </script>
+
+<style scoped>
+.hero-pano {
+  --panorama-aspect: 6.6667;
+  --hero-height: 50vh;
+  --pan-duration: 50s;
+  --panorama-width: calc(var(--panorama-aspect) * var(--hero-height));
+  position: relative;
+  width: 100%;
+  height: var(--hero-height);
+  overflow: hidden;
+  background-color: #000;
+}
+
+.hero-pano-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  height: 100%;
+  width: calc(var(--panorama-width) * 2);
+  animation: hero-pano-scroll var(--pan-duration) linear infinite;
+  will-change: transform;
+}
+
+.hero-pano-slide {
+  flex: 0 0 auto;
+  width: var(--panorama-width);
+  height: 100%;
+  background-image: url("/images/banners/banner.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.hero-pano:hover .hero-pano-track {
+  /* animation-play-state: paused; */
+}
+
+@media (max-width: 640px) {
+  .hero-pano {
+    --hero-height: 40vh;
+    --pan-duration: 45s;
+  }
+}
+
+@keyframes hero-pano-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-1 * var(--panorama-width)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pano-track {
+    animation: none;
+    transform: translateX(0);
+  }
+}
+</style>

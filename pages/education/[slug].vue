@@ -81,7 +81,7 @@ useSeoMeta({
   ogTitle: () => post.value?.title ?? undefined,
   ogDescription: () => post.value?.excerpt ?? undefined,
   ogImage: () => coverImage.value,
-  twitterCard: 'summary_large_image',
+  twitterCard: "summary_large_image",
   twitterTitle: () => post.value?.title ?? undefined,
   twitterDescription: () => post.value?.excerpt ?? undefined,
   twitterImage: () => coverImage.value,
