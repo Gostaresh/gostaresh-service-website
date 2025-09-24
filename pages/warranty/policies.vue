@@ -60,6 +60,7 @@ const category = ref<string | null>(null);
 const allBrands = computed(() =>
   Array.from(new Set(raw.map((r) => normalizeBrand(r.brand)))).sort()
 );
+
 const allCats = computed(() =>
   Array.from(new Set(raw.map((r) => r.category))).sort()
 );
@@ -67,6 +68,7 @@ const allCats = computed(() =>
 const brandOptions = computed(() =>
   allBrands.value.map((b) => ({ label: b, value: b }))
 );
+
 const categoryOptions = computed(() =>
   allCats.value.map((c) => ({ label: c, value: c }))
 );
@@ -88,7 +90,6 @@ const rows = computed(() =>
 const columns = [
   { title: "برند", key: "brand" },
   { title: "دسته", key: "category" },
-  { title: "کالا/سری", key: "product" },
   {
     title: "مدت",
     key: "duration",
@@ -109,9 +110,9 @@ useSeoMeta({ title: "شرایط گارانتی برندها" });
 
 const pagination = reactive<PaginationProps>({
   page: 1,
-  pageSize: 12, // اندازه‌ی پیش‌فرض
+  pageSize: 20, // اندازه‌ی پیش‌فرض
   showSizePicker: true, // نمایش انتخاب‌گرِ page size
-  pageSizes: [10, 12, 20, 50, 100],
+  pageSizes: [20, 50, 100],
   // رویدادهای کنترل:
   onUpdatePage: (p) => (pagination.page = p),
   onUpdatePageSize: (ps) => {

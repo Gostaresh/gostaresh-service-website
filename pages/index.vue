@@ -20,15 +20,12 @@
         ></div>
 
         <!-- محتوا: وسطِ بنر، پهنای کنترل‌شده -->
-        <div class="relative z-20 h-full flex items-center justify-center">
+        <!-- <div class="relative z-20 h-full flex items-center justify-center">
           <div class="w-full max-w-screen-xl px-4 md:px-8">
-            <!-- باکس مرکزی -->
             <div class="w-full max-w-5xl">
-              <!-- لوگو + تیتر + پاراگراف (خودش همان گرید قبلی است) -->
               <div
                 class="grid gap-4 grid-flow-row md:grid-flow-col md:grid-rows-3 items-center justify-items-center text-center"
               >
-                <!-- لوگو -->
                 <div class="md:row-span-3 flex items-center justify-center">
                   <img
                     src="/images/brands/gs-warranty-logo.png"
@@ -37,7 +34,6 @@
                   />
                 </div>
 
-                <!-- تیتر -->
                 <div class="md:col-span-2">
                   <h1
                     class="text-3xl md:text-5xl font-extrabold leading-[1.15] text-white"
@@ -51,7 +47,6 @@
                   </h1>
                 </div>
 
-                <!-- پاراگراف -->
                 <div class="md:col-span-2 md:row-span-2">
                   <p class="max-w-2xl md:mt-2 text-white/90">
                     سامانهٔ استعلام وضعیت گارانتی و مشاهدهٔ شرایط برندها؛ سریع،
@@ -60,7 +55,6 @@
                 </div>
               </div>
 
-              <!-- CTA ها زیر باکس، وسط‌چین -->
               <div class="mt-6 flex flex-wrap gap-3 justify-center">
                 <NuxtLink
                   to="/warranty/check"
@@ -80,7 +74,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </section>
     <!-- برندها -->
@@ -102,6 +96,9 @@
       <HomeFeatures />
     </section>
 
+    <!-- آموزش -->
+    <HomeBlogHighlights :posts="hotBlogs" />
+
     <!-- تایم‌لاین -->
     <section class="container mx-auto px-4 pb-10">
       <HomeTimeline />
@@ -110,10 +107,21 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import HomeTimeline from "@/components/HomeTimeline.vue";
+import HomeBlogHighlights from "@/components/HomeBlogHighlights.vue";
+import type { BlogPost } from "@/types/blog";
 
 useSeoMeta({
   title: "معرفی",
   description: "گسترش سرویس — سامانهٔ استعلام وضعیت و شرایط گارانتی برندها",
 });
+
+const blogData = (await import("@/public/data/blogs.json")).default as BlogPost[];
+
+const hotBlogs = computed(() =>
+  blogData
+    .filter((post) => post.hot)
+    .slice(0, 3)
+);
 </script>

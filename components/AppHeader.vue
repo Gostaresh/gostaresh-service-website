@@ -48,6 +48,11 @@
           to="/warranty/policies"
           >شرایط گارانتی</NuxtLink
         >
+        <NuxtLink
+          :class="[linkBase, activeClass('/education')]"
+          to="/education"
+          >آموزش</NuxtLink
+        >
       </nav>
 
       <!-- موبایل -->
@@ -75,6 +80,11 @@
             :class="[linkBaseSolid, activeClass('/warranty/policies')]"
             to="/warranty/policies"
             >شرایط گارانتی</NuxtLink
+          >
+          <NuxtLink
+            :class="[linkBaseSolid, activeClass('/education')]"
+            to="/education"
+            >آموزش</NuxtLink
           >
         </div>
       </details>
