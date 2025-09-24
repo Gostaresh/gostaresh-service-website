@@ -10,13 +10,11 @@
           <div class="hero-pano-slide"></div>
           <div class="hero-pano-slide" aria-hidden="true"></div>
         </div>
-        <div
-          class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-black/40 to-black/20 md:bg-gradient-to-l md:from-black/70 md:via-black/45 md:to-transparent"
-        ></div>
+        <div class="pointer-events-none absolute inset-0 z-10"></div>
       </div>
     </section>
 
-    <section class="container mx-auto -mt-12 px-4 md:-mt-16">
+    <section class="container mx-auto -mt-12 px-4 md:-mt-8">
       <div
         class="rounded-3xl bg-white/95 px-6 py-8 shadow-xl ring-1 ring-slate-200 backdrop-blur md:px-10 md:py-10"
       >

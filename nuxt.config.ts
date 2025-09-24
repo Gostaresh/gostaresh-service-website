@@ -21,6 +21,12 @@ export default defineNuxtConfig({
 
   modules: ["@nuxtjs/tailwindcss", "@vueuse/nuxt", "@pinia/nuxt", "@nuxt/icon"],
 
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => ["lottie-player"].includes(tag),
+    },
+  },
+
   app: {
     head: {
       htmlAttrs: { lang: "fa" },

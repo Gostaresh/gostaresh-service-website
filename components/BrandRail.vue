@@ -59,5 +59,6 @@ const onImgError = (e: Event, name: string) => {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  justify-content: center;
 }
 </style>
