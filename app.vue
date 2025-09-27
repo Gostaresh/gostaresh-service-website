@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <NConfigProvider :rtl-enabled="true">
     <NMessageProvider>
       <NDialogProvider>
@@ -6,6 +6,9 @@
           <NuxtLayout>
             <NuxtPage />
           </NuxtLayout>
+          <ClientOnly>
+            <AppPageLoader />
+          </ClientOnly>
         </NNotificationProvider>
       </NDialogProvider>
     </NMessageProvider>
@@ -19,5 +22,6 @@ import {
   NDialogProvider,
   NNotificationProvider,
 } from "naive-ui";
+import AppPageLoader from "@/components/AppPageLoader.vue";
 import "@/assets/css/main.css";
 </script>

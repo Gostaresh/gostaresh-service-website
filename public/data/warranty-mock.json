@@ -8,8 +8,8 @@
       "serials": ["SN1234567890", "SN-1234567890", "SNID-123456"],
       "brand": "Lenovo",
       "model": "IdeaPad 5 15ALC",
-      "purchaseDate": "2023-05-02",
-      "expireDate": "2025-05-02",
+      "purchaseDate": "2024-05-02",
+      "expireDate": "2027-05-02",
       "warranty": {
         "value": 24,
         "unit": "month"
@@ -54,8 +54,8 @@
       "serials": ["AS-TUF-F15-001", "ASTUFF15001"],
       "brand": "ASUS",
       "model": "TUF Gaming F15",
-      "purchaseDate": "2022-01-10",
-      "expireDate": "2024-01-10",
+      "purchaseDate": "2024-01-10",
+      "expireDate": "2026-01-10",
       "warranty": {
         "value": 24,
         "unit": "month"
