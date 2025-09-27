@@ -31,7 +31,7 @@
               : 'text-slate-600 group-hover:text-sky-600'
           "
         >
-          گسترش سرویس — همیشه یک قدم جلوتر
+          گسترش سرویس
         </span>
       </NuxtLink>
 

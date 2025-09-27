@@ -16,14 +16,14 @@
           class="brand-track"
           :class="[
             { 'is-paused': isHovered },
-            segment === 2 ? 'brand-track--clone' : null
+            segment === 2 ? 'brand-track--clone' : null,
           ]"
           :style="trackStyle"
         >
           <NuxtLink
             v-for="(b, idx) in brands"
             :key="`${b.name}-${idx}`"
-            :to="{ path: '/warranty/policies', query: { brand: b.name } }"
+            :to="{ path: '/warranty/policies', query: { q: b.name } }"
             :title="`شرایط گارانتی ${b.name}`"
             class="brand-item"
           >
@@ -55,14 +55,19 @@ try {
   brands.value = (await $fetch<Brand[]>("/data/brands.json")) ?? [];
 } catch {
   try {
-    brands.value = (await import("@/public/data/brands.json")).default as Brand[];
+    brands.value = (await import("@/public/data/brands.json"))
+      .default as Brand[];
   } catch {}
 }
 
 const isHovered = ref(false);
 
-const animationDuration = computed(() => `${Math.max(18, brands.value.length * 3)}s`);
-const trackStyle = computed(() => ({ "--marquee-duration": animationDuration.value }));
+const animationDuration = computed(
+  () => `${Math.max(18, brands.value.length * 3)}s`
+);
+const trackStyle = computed(() => ({
+  "--marquee-duration": animationDuration.value,
+}));
 
 const onImgError = (e: Event, name: string) => {
   const img = e.target as HTMLImageElement;
@@ -128,4 +133,3 @@ const onImgError = (e: Event, name: string) => {
   }
 }
 </style>
-
