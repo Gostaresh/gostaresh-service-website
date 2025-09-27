@@ -111,60 +111,174 @@
       :bordered="false"
     >
       <template #header>
-        <div class="flex items-center gap-3">
-          <span>نتیجه استعلام</span>
-          <n-tag :type="result.warrantyActive ? 'success' : 'error'">
-            {{ result.warrantyActive ? "گارانتی فعال" : "گارانتی منقضی" }}
-          </n-tag>
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-base font-semibold">نتیجه استعلام</span>
+            <n-tag :type="result.warrantyActive ? 'success' : 'error'">
+              {{ result.warrantyActive ? "گارانتی فعال" : "گارانتی منقضی" }}
+            </n-tag>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <Icon name="ph:fingerprint-duotone" class="text-base" />
+            <span class="ltr font-mono text-sm text-slate-500">{{ result.serial }}</span>
+          </div>
         </div>
       </template>
 
       <n-spin :show="loading">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <n-statistic label="برند" :value="result.brand" />
-          <n-statistic label="مدل" :value="result.model" />
-          <n-statistic label="سریال" :value="result.serial" class="ltr" />
-          <n-statistic label="تاریخ خرید" :value="j(result.purchaseDate)" />
-          <n-statistic label="پایان گارانتی" :value="j(result.expireDate)" />
-          <n-statistic label="روز باقیمانده" :value="toFa(remainDays)" />
-        </div>
-
-        <div class="mt-4">
-          <div
-            class="flex items-center justify-between text-sm text-slate-600 mb-2"
+        <div class="space-y-6">
+          <section
+            :class="[
+              'rounded-2xl p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] transition-colors',
+              statusVisual.container
+            ]"
           >
-            <span>پیشرفت مصرف گارانتی</span>
-            <span>{{ toFa(progressPct) }}%</span>
+            <div
+              class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  :class="[
+                    'grid h-12 w-12 place-items-center rounded-full text-2xl',
+                    statusVisual.iconWrapper
+                  ]"
+                >
+                  <Icon :name="statusVisual.icon" />
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm text-slate-600/80">وضعیت کنونی</p>
+                  <p class="text-xl font-semibold">
+                    {{ result.warrantyActive ? "گارانتی فعال" : "گارانتی منقضی" }}
+                  </p>
+                  <p class="text-xs text-slate-500">
+                    آخرین بروزرسانی: {{ j(result.updatedAt) }}
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="flex flex-wrap items-center justify-start gap-6 text-slate-700"
+              >
+                <div class="min-w-[110px] text-center">
+                  <p class="text-xs text-slate-500">روز باقیمانده</p>
+                  <p class="text-3xl font-bold" :class="statusVisual.accent">
+                    {{ toFa(remainDays) }}
+                  </p>
+                </div>
+                <div class="hidden h-12 w-px bg-white/40 md:block" />
+                <div class="min-w-[140px] text-center">
+                  <p class="text-xs text-slate-500">پایان گارانتی</p>
+                  <p class="text-base font-semibold">
+                    {{ j(result.expireDate) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="grid gap-3 md:grid-cols-2">
+            <div
+              v-for="item in detailCards"
+              :key="item.label"
+              class="rounded-xl border border-slate-200/70 bg-slate-50/50 px-4 py-3"
+            >
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2 text-sm text-slate-500">
+                  <Icon :name="item.icon" class="text-lg text-slate-400" />
+                  <span>{{ item.label }}</span>
+                </div>
+                <div
+                  :class="[
+                    'text-sm font-semibold text-slate-700',
+                    item.tone,
+                    item.mono ? 'ltr font-mono text-base' : ''
+                  ]"
+                >
+                  {{ item.value }}
+                  <span
+                    v-if="item.suffix"
+                    class="text-xs font-normal text-slate-500"
+                    >{{ item.suffix }}</span
+                  >
+                </div>
+              </div>
+            </div>
           </div>
-          <n-progress
-            type="line"
-            :percentage="progressPct"
-            :height="10"
-            processing
-          />
+
+          <div>
+            <div
+              class="mb-2 flex items-center justify-between text-sm text-slate-600"
+            >
+              <span>پیشرفت مصرف گارانتی</span>
+              <span class="font-medium">{{ toFa(progressPct) }}%</span>
+            </div>
+            <n-progress
+              type="line"
+              :percentage="progressPct"
+              :height="10"
+              :color="statusVisual.progress"
+              :indicator-text-color="statusVisual.progress"
+              :rail-color="'rgba(148, 163, 184, 0.25)'"
+              :show-indicator="false"
+            />
+          </div>
+
+          <div class="space-y-4">
+            <n-divider>روند رسیدگی</n-divider>
+            <WarrantyStatusSteps :status="result.status" />
+          </div>
+
+          <n-alert
+            v-if="result.note"
+            type="warning"
+            :show-icon="true"
+            class="rounded-xl border-none !bg-amber-50 text-amber-700"
+          >
+            {{ result.note }}
+          </n-alert>
+
+          <div
+            class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200/70 bg-white px-4 py-3 text-sm text-slate-600"
+          >
+            <div class="flex items-center gap-2">
+              <Icon name="ph:map-pin-duotone" class="text-lg text-slate-400" />
+              <span>مرکز خدمات: {{ result.serviceCenter }}</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-400">
+              <Icon
+                name="ph:clock-counter-clockwise-duotone"
+                class="text-base"
+              />
+              <span>آخرین بروزرسانی {{ j(result.updatedAt) }}</span>
+            </div>
+          </div>
         </div>
-
-        <n-divider>روند رسیدگی</n-divider>
-        <WarrantyStatusSteps :status="result.status" />
-
-        <n-divider />
-        <n-space size="large" align="center">
-          <span class="text-slate-500"
-            >مرکز خدمات: {{ result.serviceCenter }}</span
-          >
-          <span class="text-slate-400 text-xs"
-            >به‌روزرسانی: {{ j(result.updatedAt) }}</span
-          >
-        </n-space>
       </n-spin>
 
       <template #action>
-        <n-space>
-          <n-button quaternary @click="printPage">چاپ</n-button>
-          <n-button quaternary @click="copyLink">کپی لینک پیگیری</n-button>
-          <n-button quaternary :disabled="!form.phone" @click="enableSms"
-            >فعالسازی پیامک</n-button
+        <n-space wrap>
+          <n-button quaternary @click="printPage">
+            <template #icon>
+              <Icon name="ph:printer-duotone" />
+            </template>
+            چاپ
+          </n-button>
+          <n-button quaternary @click="copyLink">
+            <template #icon>
+              <Icon name="ph:link-duotone" />
+            </template>
+            کپی لینک پیگیری
+          </n-button>
+          <n-button
+            quaternary
+            :disabled="!form.phone"
+            @click="enableSms"
           >
+            <template #icon>
+              <Icon name="ph:chat-circle-text-duotone" />
+            </template>
+            فعالسازی پیامک
+          </n-button>
         </n-space>
       </template>
     </n-card>
@@ -216,10 +330,8 @@ import {
   NCard,
   NForm,
   NFormItem,
-  NFormItemGi,
   NInput,
   NButton,
-  NStatistic,
   NTag,
   NSpace,
   NDivider,
@@ -227,9 +339,6 @@ import {
   NAlert,
   NSpin,
   NProgress,
-  NGrid,
-  NGi,
-  NGridItem,
   useMessage,
 } from "naive-ui";
 import WarrantyStatusSteps from "~/components/WarrantyStatusSteps.vue";
@@ -364,6 +473,69 @@ const progressPct = computed(() => {
   const now = Date.now();
   const pct = ((now - start) / Math.max(1, end - start)) * 100;
   return Math.min(100, Math.max(0, Math.round(pct)));
+});
+const statusVisual = computed(() => {
+  const active = result.value?.warrantyActive;
+  if (active === undefined) {
+    return {
+      container: "border border-slate-200 bg-slate-50 text-slate-600",
+      iconWrapper: "bg-slate-200 text-slate-500",
+      icon: "ph:shield-duotone",
+      accent: "text-slate-600",
+      progress: "#0ea5e9",
+    };
+  }
+  if (active) {
+    return {
+      container: "border border-emerald-200/80 bg-emerald-50 text-emerald-700",
+      iconWrapper: "bg-emerald-500/10 text-emerald-600",
+      icon: "ph:shield-check-duotone",
+      accent: "text-emerald-600",
+      progress: "#10b981",
+    };
+  }
+  return {
+    container: "border border-rose-200/80 bg-rose-50 text-rose-700",
+    iconWrapper: "bg-rose-500/10 text-rose-600",
+    icon: "ph:shield-warning-duotone",
+    accent: "text-rose-600",
+    progress: "#ef4444",
+  };
+});
+const detailCards = computed(() => {
+  const r = result.value;
+  if (!r) return [];
+  const days = remainDays.value;
+  const nearExpiry = days <= 10 && days > 0;
+  const expired = !r.warrantyActive || days <= 0;
+  const daysTone = expired
+    ? "text-rose-600"
+    : nearExpiry
+    ? "text-amber-600"
+    : "text-emerald-600";
+
+  return [
+    { label: "برند", value: r.brand || "—", icon: "ph:factory-duotone" },
+    { label: "مدل", value: r.model || "—", icon: "ph:device-mobile-duotone" },
+    { label: "سریال", value: r.serial, icon: "ph:barcode-duotone", mono: true },
+    {
+      label: "تاریخ خرید",
+      value: j(r.purchaseDate),
+      icon: "ph:calendar-check-duotone",
+    },
+    {
+      label: "پایان گارانتی",
+      value: j(r.expireDate),
+      icon: "ph:calendar-dots-duotone",
+    },
+    {
+      label: "روز باقیمانده",
+      value: toFa(Math.max(days, 0)),
+      icon: "ph:hourglass-duotone",
+      tone: daysTone,
+      suffix: "روز",
+    },
+  ];
 });
 
 /* اکشن‌ها */
