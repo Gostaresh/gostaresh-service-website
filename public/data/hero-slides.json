@@ -1,0 +1,34 @@
+﻿[
+  {
+    "title": "خدمات پس از فروش یکپارچه",
+    "subtitle": "در کنار شبکه نمایندگان",
+    "description": "پوشش سراسری و پشتیبانی تخصصی برای تعمیرات و تامین قطعات برندهای لوازم خانگی.",
+    "ctaLabel": "ثبت درخواست نمایندگی",
+    "ctaLink": "/representatives/signup",
+    "image": "/images/slides/1.jpg"
+  },
+  {
+    "title": "",
+    "subtitle": "",
+    "description": "",
+    "ctaLabel": "",
+    "ctaLink": "",
+    "image": "/images/slides/2.jpg"
+  },
+  {
+    "title": "",
+    "subtitle": "",
+    "description": "",
+    "ctaLabel": "",
+    "ctaLink": "",
+    "image": "/images/slides/3.jpg"
+  },
+  {
+    "title": "",
+    "subtitle": "",
+    "description": "",
+    "ctaLabel": "",
+    "ctaLink": "",
+    "image": "/images/slides/4.jpg"
+  }
+]

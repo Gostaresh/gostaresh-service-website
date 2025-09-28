@@ -1,16 +1,102 @@
 ﻿<template>
   <div class="relative" dir="rtl">
     <!-- HERO -->
+
     <section
       class="relative isolate mx-[calc(50%-50vw)] w-screen overflow-hidden"
       dir="rtl"
     >
+      <!--
       <div class="hero-pano" role="img" aria-label="بنر خدمات گسترش سرویس">
         <div class="hero-pano-track">
           <div class="hero-pano-slide"></div>
           <div class="hero-pano-slide" aria-hidden="true"></div>
         </div>
         <div class="pointer-events-none absolute inset-0 z-10"></div>
+      </div>
+      -->
+      <div
+        class="relative h-[420px] w-full sm:h-[480px] md:h-[560px] xl:h-[700px]"
+      >
+        <div class="relative h-full w-full overflow-hidden">
+          <div
+            class="flex h-full transition-transform duration-700 ease-out"
+            dir="ltr"
+            :style="{ transform: heroSliderTransform }"
+          >
+            <article
+              v-for="(slide, index) in heroSlides"
+              :key="slide.image || index"
+              class="relative h-full min-w-full shrink-0"
+            >
+              <img
+                :src="slide.image"
+                :alt="slide.title"
+                class="h-full w-full object-cover"
+              />
+              <div class="absolute inset-0" aria-hidden="true"></div>
+              <div
+                class="absolute inset-0 flex flex-col items-end justify-center gap-3 px-6 text-white sm:px-12 md:px-24"
+              >
+                <!-- <p
+                  v-if="slide.subtitle"
+                  class="text-xs font-medium tracking-[0.3em] text-sky-300 md:text-sm"
+                >
+                  {{ slide.subtitle }}
+                </p>
+                <h1
+                  class="text-2xl font-bold leading-tight md:text-4xl xl:text-5xl"
+                >
+                  {{ slide.title }}
+                </h1>
+                <p
+                  class="max-w-xl text-sm leading-relaxed text-slate-100 md:text-base"
+                >
+                  {{ slide.description }}
+                </p>
+                <NuxtLink
+                  :to="slide.ctaLink"
+                  class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-5 py-2 text-sm font-medium text-white transition hover:bg-sky-600"
+                >
+                  {{ slide.ctaLabel }}
+                  <Icon name="ph:arrow-left-duotone" size="18" />
+                </NuxtLink> -->
+              </div>
+            </article>
+          </div>
+          <button
+            v-if="heroSlides.length > 1"
+            type="button"
+            class="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full bg-white/80 p-2 text-slate-700 transition hover:bg-white sm:flex"
+            @click="prevHeroSlide"
+            aria-label="اسلاید قبلی"
+          >
+            <Icon name="ph:caret-left-duotone" size="20" />
+          </button>
+          <button
+            v-if="heroSlides.length > 1"
+            type="button"
+            class="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full bg-white/80 p-2 text-slate-700 transition hover:bg-white sm:flex"
+            @click="nextHeroSlide"
+            aria-label="اسلاید بعدی"
+          >
+            <Icon name="ph:caret-right-duotone" size="20" />
+          </button>
+          <div
+            v-if="heroSlides.length > 1"
+            class="pointer-events-none absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2"
+          >
+            <button
+              v-for="(slide, index) in heroSlides"
+              :key="`dot-${slide.image}`"
+              type="button"
+              class="pointer-events-auto size-2 rounded-full transition sm:size-3"
+              :class="index === currentHeroSlide ? 'bg-white' : 'bg-white/40'"
+              @click="goToHeroSlide(index)"
+              :aria-label="`پرش به اسلاید ${index + 1}`"
+            ></button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -109,7 +195,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import HomeTimeline from "@/components/HomeTimeline.vue";
 import HomeServiceShowcase from "@/components/HomeServiceShowcase.vue";
 import HomeBlogHighlights from "@/components/HomeBlogHighlights.vue";
@@ -123,6 +209,75 @@ type ActionCard = {
   icon: string;
   buttonLabel: string;
 };
+
+type HeroSlide = {
+  title: string;
+  subtitle?: string;
+  description: string;
+  ctaLabel: string;
+  ctaLink: string;
+  image: string;
+};
+
+const heroSlides = (await import("@/public/data/hero-slides.json"))
+  .default as HeroSlide[];
+
+const HERO_SLIDE_DURATION = 6000;
+const currentHeroSlide = ref(0);
+const heroSliderTransform = computed(
+  () => `translateX(-${currentHeroSlide.value * 100}%)`
+);
+let heroSliderTimer: ReturnType<typeof setInterval> | undefined;
+
+const setHeroSlide = (value: number) => {
+  const slideCount = heroSlides.length;
+  if (!slideCount) {
+    currentHeroSlide.value = 0;
+    return;
+  }
+
+  const normalizedIndex = ((value % slideCount) + slideCount) % slideCount;
+  currentHeroSlide.value = normalizedIndex;
+};
+
+const stopHeroAutoplay = () => {
+  if (heroSliderTimer) {
+    clearInterval(heroSliderTimer);
+    heroSliderTimer = undefined;
+  }
+};
+
+const scheduleHeroAutoplay = () => {
+  stopHeroAutoplay();
+  if (heroSlides.length <= 1) {
+    return;
+  }
+
+  heroSliderTimer = setInterval(() => {
+    setHeroSlide(currentHeroSlide.value + 1);
+  }, HERO_SLIDE_DURATION);
+};
+
+const goToHeroSlide = (index: number) => {
+  setHeroSlide(index);
+  scheduleHeroAutoplay();
+};
+
+const nextHeroSlide = () => {
+  goToHeroSlide(currentHeroSlide.value + 1);
+};
+
+const prevHeroSlide = () => {
+  goToHeroSlide(currentHeroSlide.value - 1);
+};
+
+onMounted(() => {
+  scheduleHeroAutoplay();
+});
+
+onBeforeUnmount(() => {
+  stopHeroAutoplay();
+});
 
 useSeoMeta({
   title: "معرفی",
@@ -186,8 +341,7 @@ const showcaseCards = [
     icon: "ph:trend-up-duotone",
   },
 ];
-const showcaseHeroImage =
-  "https://images.unsplash.com/photo-1525182008055-f88b95ff7980?auto=format&fit=crop&w=1200&q=80";
+const showcaseHeroImage = "/images/banners/ways.jpg";
 
 const hotBlogs = computed(() =>
   blogData.filter((post) => post.hot).slice(0, 3)
@@ -195,6 +349,7 @@ const hotBlogs = computed(() =>
 </script>
 
 <style scoped>
+/*
 .hero-pano {
   --panorama-aspect: 6.6667;
   --hero-height: 60vh;
@@ -229,8 +384,8 @@ const hotBlogs = computed(() =>
 }
 
 .hero-pano:hover .hero-pano-track {
-  /* animation-play-state: paused; */
-}
+  animation-play-state: paused;
+} 
 
 @media (max-width: 640px) {
   .hero-pano {
@@ -255,4 +410,5 @@ const hotBlogs = computed(() =>
     transform: translateX(0);
   }
 }
+*/
 </style>

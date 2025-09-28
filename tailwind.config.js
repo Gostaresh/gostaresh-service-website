@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["IranSans", "ui-sans-serif", "system-ui"],
+        sans: ["PeydaWeb", "IranSans", "ui-sans-serif", "system-ui"],
       },
     },
   },
