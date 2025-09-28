@@ -12,8 +12,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-Thin.woff2") format("woff2"),
-    url("woff/PeydaWeb-Thin.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-Thin.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-Thin.woff") format("woff");
   font-weight: 100;
   font-style: normal;
   font-display: swap;
@@ -21,8 +21,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-ExtraLight.woff2") format("woff2"),
-    url("woff/PeydaWeb-ExtraLight.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-ExtraLight.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-ExtraLight.woff") format("woff");
   font-weight: 200;
   font-style: normal;
   font-display: swap;
@@ -30,8 +30,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-Light.woff2") format("woff2"),
-    url("woff/PeydaWeb-Light.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-Light.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-Light.woff") format("woff");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -39,8 +39,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-Regular.woff2") format("woff2"),
-    url("woff/PeydaWeb-Regular.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-Regular.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -48,8 +48,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-Medium.woff2") format("woff2"),
-    url("woff/PeydaWeb-Medium.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-Medium.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-Medium.woff") format("woff");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -57,8 +57,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-SemiBold.woff2") format("woff2"),
-    url("woff/PeydaWeb-SemiBold.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-SemiBold.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-SemiBold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -66,8 +66,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-Bold.woff2") format("woff2"),
-    url("woff/PeydaWeb-Bold.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-Bold.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -75,8 +75,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-ExtraBold.woff2") format("woff2"),
-    url("woff/PeydaWeb-ExtraBold.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-ExtraBold.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-ExtraBold.woff") format("woff");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -84,8 +84,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-Black.woff2") format("woff2"),
-    url("woff/PeydaWeb-Black.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-Black.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-Black.woff") format("woff");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -93,8 +93,8 @@
 
 @font-face {
   font-family: "PeydaWeb";
-  src: url("woff2/PeydaWeb-ExtraBlack.woff2") format("woff2"),
-    url("woff/PeydaWeb-ExtraBlack.woff") format("woff");
+  src: url("@/assets/fonts/PeydaWeb-ExtraBlack.woff2") format("woff2"),
+    url("@/assets/fonts/PeydaWeb-ExtraBlack.woff") format("woff");
   font-weight: 950;
   font-style: normal;
   font-display: swap;

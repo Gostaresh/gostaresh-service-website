@@ -197,7 +197,7 @@ const hotBlogs = computed(() =>
 <style scoped>
 .hero-pano {
   --panorama-aspect: 6.6667;
-  --hero-height: 50vh;
+  --hero-height: 60vh;
   --pan-duration: 50s;
   --panorama-width: calc(var(--panorama-aspect) * var(--hero-height));
   position: relative;
