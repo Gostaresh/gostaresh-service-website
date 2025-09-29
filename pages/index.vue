@@ -32,7 +32,7 @@
               <img
                 :src="slide.image"
                 :alt="slide.title"
-                class="h-full w-full object-cover"
+                class="h-full w-full object-cover hero-slide-image"
               />
               <div class="absolute inset-0" aria-hidden="true"></div>
               <div
@@ -138,21 +138,25 @@
 
     <StatsStrip />
 
+    <HomeServiceCenters />
+
     <!-- برندها -->
     <section class="container mx-auto px-4 py-8">
       <div
-        class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between"
+        class="flex flex-col items-center gap-3 text-center"
       >
-        <div>
-          <h2 class="text-xl font-bold text-slate-800">برندهای تحت پوشش</h2>
-          <p class="text-sm text-slate-500">
+        <div class="max-w-2xl">
+          <h2 class="text-xl font-bold text-slate-800 text-center">
+            برندهای تحت پوشش
+          </h2>
+          <p class="text-sm text-slate-500 text-center mx-auto">
             از لوازم دیجیتال تا لوازم خانگی؛ گسترش سرویس شریک رسمی ده‌ها برند
             مطرح در سراسر کشور است.
           </p>
         </div>
         <NuxtLink
           to="/warranty/policies"
-          class="inline-flex items-center gap-1 text-sm font-medium text-sky-600 transition hover:text-sky-700"
+          class="inline-flex items-center gap-1 text-sm font-medium text-sky-600 transition hover:text-sky-700 self-center"
         >
           مشاهده شرایط کامل
           <Icon name="ph:arrow-left-duotone" size="16" />
@@ -166,8 +170,10 @@
     <HomeServiceShowcase :cards="showcaseCards" :image="showcaseHeroImage" />
     <!-- مزیت‌ها -->
     <section class="container mx-auto px-4 py-10">
-      <div class="mb-6 flex flex-col gap-2 text-center md:text-right">
-        <h2 class="text-xl font-bold text-slate-800">چرا گسترش سرویس؟</h2>
+      <div class="mb-6 flex flex-col gap-2 text-center">
+        <h2 class="text-xl font-bold text-slate-800 text-center">
+          چرا گسترش سرویس؟
+        </h2>
         <p class="text-sm text-slate-500">
           با امکانات هوشمند ما، فرآیند خدمات پس از فروش برای مشتری و نمایندگی
           ساده و قابل پیگیری می‌شود.
@@ -183,8 +189,10 @@
 
     <!-- تایم‌لاین -->
     <section class="container mx-auto px-4 py-10">
-      <div class="mb-6 flex flex-col gap-2 text-center md:text-right">
-        <h2 class="text-xl font-bold text-slate-800">مسیر خدمات چگونه است؟</h2>
+      <div class="mb-6 flex flex-col gap-2 text-center">
+        <h2 class="text-xl font-bold text-slate-800 text-center">
+          مسیر خدمات چگونه است؟
+        </h2>
         <p class="text-sm text-slate-500">
           از ثبت درخواست تا تحویل دستگاه، مراحل دقیق و شفاف در دسترس شماست.
         </p>
@@ -200,6 +208,7 @@ import HomeTimeline from "@/components/HomeTimeline.vue";
 import HomeServiceShowcase from "@/components/HomeServiceShowcase.vue";
 import HomeBlogHighlights from "@/components/HomeBlogHighlights.vue";
 import StatsStrip from "@/components/StatsStrip.vue";
+import HomeServiceCenters from "@/components/HomeServiceCenters.vue";
 import type { BlogPost } from "@/types/blog";
 
 type ActionCard = {
@@ -411,4 +420,15 @@ const hotBlogs = computed(() =>
   }
 }
 */
+
+.hero-slide-image {
+  object-fit: contain;
+}
+
+@media (min-width: 640px) {
+  .hero-slide-image {
+    object-fit: cover;
+  }
+}
+
 </style>

@@ -1,10 +1,10 @@
 <template>
   <section class="container mx-auto px-4 py-6">
-    <div class="flex items-center justify-between mb-3" dir="rtl">
-      <h2 class="text-lg font-bold">آموزش و بلاگ</h2>
+    <div class="flex flex-col items-center gap-3 mb-6 text-center" dir="rtl">
+      <h2 class="text-xl font-bold text-slate-800 text-center">آموزش و بلاگ</h2>
       <NuxtLink
         to="/education"
-        class="text-sky-600 hover:text-sky-700 text-sm inline-flex items-center gap-1"
+        class="inline-flex items-center gap-1 text-sm font-semibold text-sky-600 transition hover:text-sky-700"
       >
         مشاهده همه
         <Icon name="ph:arrow-left-duotone" size="16" />

@@ -127,9 +127,10 @@ import { useWindowScroll } from "@vueuse/core";
 type NavLink = { to: string; label: string };
 
 const navLinks: NavLink[] = [
-  { to: "/", label: "معرفی" },
+  { to: "/", label: "خانه" },
   { to: "/warranty/check", label: "استعلام" },
   { to: "/warranty/policies", label: "شرایط گارانتی" },
+  { to: "/representatives", label: "نمایندگی‌ها" },
   { to: "/education", label: "آموزش" },
 ];
 
@@ -170,3 +171,5 @@ const mobileLinkClass = (path: string) =>
       : "text-slate-700 hover:bg-slate-100",
   ].join(" ");
 </script>
+
+
