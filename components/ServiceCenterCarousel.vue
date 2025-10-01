@@ -1,6 +1,9 @@
 ﻿<template>
   <div
-    :class="['relative flex w-full flex-col items-center select-none', hasMultiple ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : '']"
+    :class="[
+      'relative flex w-full flex-col items-center select-none',
+      hasMultiple ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : '',
+    ]"
     dir="rtl"
     :style="{ touchAction: 'pan-y' }"
     @mouseenter="stopAutoplay"
@@ -55,7 +58,11 @@
         :key="center.id"
         type="button"
         class="h-2.5 rounded-full transition-all"
-        :class="index === current ? 'w-7 bg-sky-500' : 'w-2.5 bg-slate-300 hover:bg-slate-400'"
+        :class="
+          index === current
+            ? 'w-7 bg-sky-500'
+            : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+        "
         @click="goTo(index)"
         :aria-label="`نمایش اسلاید ${index + 1}`"
       ></button>
@@ -87,7 +94,8 @@ const dragDelta = ref(0);
 const isDragging = ref(false);
 const activePointerId = ref<number | null>(null);
 
-const mod = (value: number, length: number) => ((value % length) + length) % length;
+const mod = (value: number, length: number) =>
+  ((value % length) + length) % length;
 
 const goTo = (index: number) => {
   const total = centersList.value.length;
@@ -295,6 +303,4 @@ watch(
 onBeforeUnmount(() => {
   stopAutoplay();
 });
-
 </script>
-

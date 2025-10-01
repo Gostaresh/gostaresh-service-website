@@ -29,11 +29,10 @@
       >
         <div class="space-y-3 text-start">
           <h2 class="text-lg font-bold text-slate-800 md:text-xl">
-            جست‌وجوی سریع نمایندگی‌ها
+            آمار شبکه نمایندگی‌ها
           </h2>
           <p class="mx-auto max-w-xl text-sm leading-7 text-slate-600">
-            با فیلتر کردن بر اساس شهر یا نام شعبه می‌توانید سریع‌تر به اطلاعات
-            تماس، ساعت کاری و خدمات ویژه هر مرکز دسترسی پیدا کنید.
+            گزارش سریع از تعداد مراکز فعال و شهرهای تحت پوشش گسترش سرویس.
           </p>
         </div>
         <div
@@ -51,54 +50,13 @@
               toFa(uniqueCities)
             }}</span>
           </div>
-          <div class="pt-2">
-            <NInput
-              v-model:value="q"
-              placeholder="جست‌وجوی شهر یا نمایندگی"
-              clearable
-            >
-              <template #prefix>
-                <Icon
-                  name="ph:magnifying-glass-duotone"
-                  class="text-base text-slate-400"
-                />
-              </template>
-            </NInput>
-          </div>
         </div>
-      </div>
-    </section>
-
-    <section class="space-y-4">
-      <div class="flex items-center justify-between text-xs text-slate-500">
-        <span>
-          {{ toFa(filtered.length) }} مرکز مطابق با جست‌وجوی شما یافت شد.
-        </span>
-        <NuxtLink
-          to="/"
-          class="inline-flex items-center gap-1 text-sky-600 transition hover:text-sky-700"
-        >
-          بازگشت به صفحه اصلی
-          <Icon name="ph:arrow-left" size="14" />
-        </NuxtLink>
-      </div>
-
-      <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-        <ServiceCenterCard
-          v-for="center in filtered"
-          :key="center.id"
-          :center="center"
-          size="md"
-        />
       </div>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { NInput } from "naive-ui";
-import ServiceCenterCard from "@/components/ServiceCenterCard.vue";
 import ServiceCenterCarousel from "@/components/ServiceCenterCarousel.vue";
 import { getServiceCenters } from "@/utils/service-centers";
 import type { ServiceCenter } from "@/types/service-center";
@@ -107,28 +65,6 @@ const centers: ServiceCenter[] = await getServiceCenters();
 
 const totalCenters = centers.length;
 const uniqueCities = new Set(centers.map((item) => item.city)).size;
-
-const q = ref("");
-
-const normalize = (value: string) =>
-  value
-    .toLowerCase()
-    .replace(/[\s‌]+/g, "")
-    .replace(/[يى]/g, "ی")
-    .replace(/ك/g, "ک");
-
-const filtered = computed<ServiceCenter[]>(() => {
-  const search = normalize(q.value ?? "");
-  if (!search) {
-    return centers;
-  }
-  return centers.filter((center) => {
-    const haystack = normalize(
-      `${center.title} ${center.city} ${center.tagline} ${center.summary}`
-    );
-    return haystack.includes(search);
-  });
-});
 
 const digitMap = new Map([
   ["0", "۰"],

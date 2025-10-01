@@ -142,16 +142,13 @@
 
     <!-- برندها -->
     <section class="container mx-auto px-4 py-8">
-      <div
-        class="flex flex-col items-center gap-3 text-center"
-      >
+      <div class="flex flex-col items-center gap-3 text-center">
         <div class="max-w-2xl">
           <h2 class="text-xl font-bold text-slate-800 text-center">
             برندهای تحت پوشش
           </h2>
           <p class="text-sm text-slate-500 text-center mx-auto">
-            از لوازم دیجیتال تا لوازم خانگی؛ گسترش سرویس شریک رسمی ده‌ها برند
-            مطرح در سراسر کشور است.
+            گسترش سرویس شریک رسمی ده‌ها برند مطرح در سراسر کشور است.
           </p>
         </div>
         <NuxtLink
@@ -430,5 +427,4 @@ const hotBlogs = computed(() =>
     object-fit: cover;
   }
 }
-
 </style>
