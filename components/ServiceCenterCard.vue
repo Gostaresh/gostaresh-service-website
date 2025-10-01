@@ -5,7 +5,8 @@
     dir="rtl"
   >
     <div
-      class="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="filter: saturate(1.05)"
+      class="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+      style="filter: saturate(1.05)"
       :style="backgroundStyle"
       aria-hidden="true"
     ></div>
@@ -20,11 +21,15 @@
       <div class="flex w-full items-start justify-between">
         <div class="flex flex-col items-end gap-1">
           <span
-            class="text-lg font-bold text-sky-50 transition-colors duration-200 group-hover:text-white" style="text-shadow: 0 16px 36px rgba(15,23,42,0.55)"
+            class="text-lg font-bold text-sky-50 transition-colors duration-200 group-hover:text-white"
+            style="text-shadow: 0 16px 36px rgba(15, 23, 42, 0.55)"
           >
             {{ center.title }}
           </span>
-          <span class="text-sm text-slate-100" style="text-shadow: 0 12px 24px rgba(15,23,42,0.4)">
+          <span
+            class="text-sm text-slate-100"
+            style="text-shadow: 0 12px 24px rgba(15, 23, 42, 0.4)"
+          >
             {{ center.tagline }}
           </span>
         </div>
@@ -35,7 +40,10 @@
         </span>
       </div>
 
-      <p class="text-sm leading-relaxed text-slate-100" style="text-shadow: 0 10px 28px rgba(15,23,42,0.5)">
+      <p
+        class="text-sm leading-relaxed text-slate-100"
+        style="text-shadow: 0 10px 28px rgba(15, 23, 42, 0.5)"
+      >
         {{ center.summary }}
       </p>
 
@@ -72,5 +80,3 @@ const backgroundStyle = computed(() => ({
 }));
 </script>
 <!-- backgroundImage: `linear-gradient(135deg, rgba(15, 118, 227, 0.08), rgba(244, 247, 254, 0.75)), url(${props.center.image})`, -->
-
-
