@@ -35,7 +35,7 @@
       <button
         v-if="hasMultiple"
         type="button"
-        class="absolute right-[-12px] top-1/2 hidden -translate-y-1/2 rounded-full border border-slate-200 bg-white/85 p-3 text-slate-600 shadow-sm transition hover:bg-white hover:text-sky-600 sm:flex"
+        class="absolute z-40 right-[-12px] top-1/2 hidden -translate-y-1/2 rounded-full border border-slate-200 bg-white/85 p-3 text-slate-600 shadow-sm transition hover:bg-white hover:text-sky-600 sm:flex"
         @click="goPrev"
         aria-label="نمایش قبلی"
       >
@@ -44,7 +44,7 @@
       <button
         v-if="hasMultiple"
         type="button"
-        class="absolute left-[-12px] top-1/2 hidden -translate-y-1/2 rounded-full border border-slate-200 bg-white/85 p-3 text-slate-600 shadow-sm transition hover:bg-white hover:text-sky-600 sm:flex"
+        class="absolute z-40 left-[-12px] top-1/2 hidden -translate-y-1/2 rounded-full border border-slate-200 bg-white/85 p-3 text-slate-600 shadow-sm transition hover:bg-white hover:text-sky-600 sm:flex"
         @click="goNext"
         aria-label="نمایش بعدی"
       >

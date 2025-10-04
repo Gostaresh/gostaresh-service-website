@@ -132,6 +132,7 @@ const navLinks: NavLink[] = [
   { to: "/warranty/policies", label: "شرایط گارانتی" },
   { to: "/representatives", label: "نمایندگی‌ها" },
   { to: "/education", label: "آموزش" },
+  { to: "/about", label: "درباره ما" },
 ];
 
 const route = useRoute();
@@ -171,5 +172,3 @@ const mobileLinkClass = (path: string) =>
       : "text-slate-700 hover:bg-slate-100",
   ].join(" ");
 </script>
-
-
