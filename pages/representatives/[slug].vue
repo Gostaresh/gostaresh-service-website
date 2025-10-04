@@ -34,10 +34,10 @@
           aria-hidden="true"
         ></div>
         <div
-          class="relative z-10 flex min-h-[320px] flex-col items-end justify-between gap-6 p-8 text-right text-slate-800"
+          class="relative z-10 flex min-h-[320px] flex-col items-start justify-between gap-6 p-8 text-right text-slate-800"
         >
           <div class="flex w-full items-start justify-between">
-            <div class="flex flex-col items-end gap-1">
+            <div class="flex flex-col items-start gap-1">
               <span class="text-2xl font-bold text-sky-700">{{
                 center.title
               }}</span>
@@ -124,7 +124,7 @@
                 <span class="font-semibold text-slate-700">ایمیل پشتیبانی</span>
                 <a
                   :href="`mailto:${center.contact.email}`"
-                  class="text-sky-600 transition hover:text-sky-700"
+                  class="line-clamp-3 text-sky-600 transition hover:text-sky-700"
                   >{{ center.contact.email }}</a
                 >
               </div>

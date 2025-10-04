@@ -15,9 +15,7 @@
         <div class="pointer-events-none absolute inset-0 z-10"></div>
       </div>
       -->
-      <div
-        class="relative h-[420px] w-full sm:h-[480px] md:h-[560px] xl:h-[700px]"
-      >
+      <div class="relative w-full hero-viewport">
         <div class="relative h-full w-full overflow-hidden">
           <div
             class="flex h-full transition-transform duration-700 ease-out"
@@ -32,7 +30,7 @@
               <img
                 :src="slide.image"
                 :alt="slide.title"
-                class="h-full w-full object-cover hero-slide-image"
+                class="w-full object-cover hero-slide-image"
               />
               <div class="absolute inset-0" aria-hidden="true"></div>
               <div
@@ -101,7 +99,9 @@
     </section>
 
     <!-- Quick Actions -->
-    <section class="relative z-20 container mx-auto -mt-24 px-4 md:-mt-12">
+    <section
+      class="relative z-20 container mx-auto mt-12 px-4 md:-mt-12 xl:-mt-24"
+    >
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <NuxtLink
           v-for="action in actionCards"
@@ -418,13 +418,15 @@ const hotBlogs = computed(() =>
 }
 */
 
-.hero-slide-image {
-  object-fit: contain;
+.hero-viewport {
+  width: 100%;
+  aspect-ratio: 1900 / 700;
+  max-height: 700px;
 }
 
-@media (min-width: 640px) {
-  .hero-slide-image {
-    object-fit: cover;
-  }
+.hero-slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 </style>

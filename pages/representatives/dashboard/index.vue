@@ -1,0 +1,15 @@
+﻿<template>
+  <section class="container mx-auto px-4 py-24 text-center" dir="rtl">
+    <h1 class="text-3xl font-bold text-sky-600">پیشخوان نمایندگی</h1>
+    <p class="mt-4 text-slate-600">
+      نسخه کامل پیشخوان نمایندگی در دست توسعه است. فعلاً می‌توانید از این صفحه برای جلوگیری از خطای بیلد استفاده کنید.
+    </p>
+    <NuxtLink
+      to="/"
+      class="mt-10 inline-flex items-center gap-2 rounded-full bg-sky-500 px-6 py-3 text-white transition hover:bg-sky-600"
+    >
+      بازگشت به خانه
+      <Icon name="ph:arrow-left" size="20" />
+    </NuxtLink>
+  </section>
+</template>

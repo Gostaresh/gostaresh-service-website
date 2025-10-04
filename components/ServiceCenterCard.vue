@@ -15,11 +15,11 @@
       aria-hidden="true"
     ></div>
     <div
-      class="relative z-20 flex h-full flex-col items-end justify-between gap-6 p-8 text-right text-slate-800"
+      class="relative z-20 flex h-full flex-col items-start justify-between gap-6 p-8 text-right text-slate-800"
       :class="sizeClass"
     >
       <div class="flex w-full items-start justify-between">
-        <div class="flex flex-col items-end gap-1">
+        <div class="flex flex-col items-start gap-1">
           <span
             class="text-lg font-bold text-sky-50 transition-colors duration-200 group-hover:text-white"
             style="text-shadow: 0 16px 36px rgba(15, 23, 42, 0.55)"

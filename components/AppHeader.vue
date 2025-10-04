@@ -172,3 +172,4 @@ const mobileLinkClass = (path: string) =>
       : "text-slate-700 hover:bg-slate-100",
   ].join(" ");
 </script>
+

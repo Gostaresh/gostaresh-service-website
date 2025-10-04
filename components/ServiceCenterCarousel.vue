@@ -24,7 +24,7 @@
           :style="slide.style"
         >
           <div
-            class="w-[260px] sm:w-[360px]"
+            class="w-[260px] sm:w-[460px]"
             @click="handleCardClick(index, $event)"
           >
             <ServiceCenterCard :center="slide.center" size="lg" />
