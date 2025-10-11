@@ -100,7 +100,7 @@
 
     <!-- Quick Actions -->
     <section
-      class="relative z-20 container mx-auto mt-12 px-4 md:-mt-12 xl:-mt-24"
+      class="relative z-20 container mx-auto mt-12 px-4 md:-mt-8 xl:-mt-12"
     >
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <NuxtLink
@@ -167,15 +167,6 @@
     <HomeServiceShowcase :cards="showcaseCards" :image="showcaseHeroImage" />
     <!-- مزیت‌ها -->
     <section class="container mx-auto px-4 py-10">
-      <div class="mb-6 flex flex-col gap-2 text-center">
-        <h2 class="text-xl font-bold text-slate-800 text-center">
-          چرا گسترش سرویس؟
-        </h2>
-        <p class="text-sm text-slate-500">
-          با امکانات هوشمند ما، فرآیند خدمات پس از فروش برای مشتری و نمایندگی
-          ساده و قابل پیگیری می‌شود.
-        </p>
-      </div>
       <HomeFeatures />
     </section>
 
