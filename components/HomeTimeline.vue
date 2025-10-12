@@ -1,8 +1,6 @@
 <template>
   <section aria-labelledby="howitworks" dir="rtl" class="pt-4">
-    <div class="flex items-center justify-between mb-5">
-      <h2 id="howitworks" class="text-lg font-bold">چطور کار می‌کند؟</h2>
-    </div>
+    <h2 id="features-title" class="sr-only">چطور کار می‌کند؟</h2>
 
     <ol class="relative grid gap-8 md:grid-cols-4">
       <li v-for="(s, i) in steps" :key="s.title" class="text-center px-4">
@@ -38,5 +36,6 @@ type Step = {
   desc: string;
 };
 
-const steps = (await import("@/public/data/home-timeline.json")).default as Step[];
+const steps = (await import("@/public/data/home-timeline.json"))
+  .default as Step[];
 </script>

@@ -2,10 +2,14 @@
   <section aria-labelledby="features-title" class="space-y-6">
     <h2 id="features-title" class="sr-only">مزیت‌های گسترش سرویس</h2>
 
-    <div class="flex flex-wrap items-center justify-around gap-6">
-      <div class="header-title flex-1 min-w-[100px] space-y-3 text-right">
+    <div
+      class="header-layout grid gap-6 items-start md:items-center md:grid-cols-2 xl:grid-cols-2"
+    >
+      <div
+        class="header-title max-w-2xl space-y-3 text-center md:justify-self-end md:text-right md:col-span-1"
+      >
         <slot name="title">
-          <h2 class="text-2xl font-bold text-slate-900 md:text-2xl">
+          <h2 class="text-2xl font-bold text-slate-900 md:text-3xl">
             چرا گسترش سرویس؟
           </h2>
           <p class="text-base text-slate-500">
@@ -14,26 +18,24 @@
           </p>
         </slot>
       </div>
-      <div class="flex shrink-0 justify-center md:justify-center">
-        <slot name="visual">
-          <ClientOnly>
-            <div class="mx-auto aspect-square w-48 md:w-64">
-              <lottie-player
-                :src="lottieSrc"
-                background="transparent"
-                speed="1"
-                autoplay
-                loop
-                class="h-full w-full"
-              ></lottie-player>
-            </div>
-            <template #fallback>
-              <div
-                class="mx-auto aspect-square w-32 md:w-48 rounded-2xl bg-slate-100"
-              ></div>
-            </template>
-          </ClientOnly>
-        </slot>
+      <div class="header-visual md:col-span-1 place-self-center">
+        <ClientOnly>
+          <div class="aspect-square w-64 md:w-80 mx-auto">
+            <lottie-player
+              :src="lottieSrc"
+              background="transparent"
+              speed="1"
+              autoplay
+              loop
+              class="h-full w-full"
+            ></lottie-player>
+          </div>
+          <template #fallback>
+            <div
+              class="aspect-square w-64 md:w-80 rounded-2xl bg-slate-100 mx-auto"
+            ></div>
+          </template>
+        </ClientOnly>
       </div>
     </div>
 

@@ -165,15 +165,6 @@
     </section>
 
     <HomeServiceShowcase :cards="showcaseCards" :image="showcaseHeroImage" />
-    <!-- مزیت‌ها -->
-    <section class="container mx-auto px-4 py-10">
-      <HomeFeatures />
-    </section>
-
-    <!-- آموزش -->
-    <section class="bg-slate-50/70 py-10">
-      <HomeBlogHighlights :posts="hotBlogs" />
-    </section>
 
     <!-- تایم‌لاین -->
     <section class="container mx-auto px-4 py-10">
@@ -186,6 +177,16 @@
         </p>
       </div>
       <HomeTimeline />
+    </section>
+
+    <!-- مزیت‌ها -->
+    <section class="container mx-auto px-4 py-10">
+      <HomeFeatures />
+    </section>
+
+    <!-- آموزش -->
+    <section class="bg-slate-50/70 py-10">
+      <HomeBlogHighlights :posts="hotBlogs" />
     </section>
   </div>
 </template>
@@ -341,7 +342,7 @@ const showcaseCards = [
 const showcaseHeroImage = "/images/banners/ways.jpg";
 
 const hotBlogs = computed(() =>
-  blogData.filter((post) => post.hot).slice(0, 3)
+  blogData.filter((post) => post.hot).slice(0, 6)
 );
 </script>
 
