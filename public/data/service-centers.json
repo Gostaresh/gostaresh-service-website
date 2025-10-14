@@ -6,7 +6,7 @@
     "city": "تهران",
     "tagline": "دفتر مرکزی تهران",
     "summary": "پشتیبانی کامل لپ‌تاپ، موبایل و تجهیزات بازی با قطعات اورجینال و تیم فنی ویژه.",
-    "image": "/images/service-centers/tehran.jpg",
+    "image": "/images/cities/tehran.png",
     "primary": true,
     "contact": {
       "address": "تهران، خیابان مطهری، ابتدای خیابان سهروردی، مجتمع کسری، طبقه چهارم واحد 403",
@@ -28,7 +28,7 @@
     "city": "اهواز",
     "tagline": "مرکز گسترش سرویس",
     "summary": "پوشش کامل محصولات کالای دیجیتال در جنوب کشور با امکان ارسال فوری قطعات.",
-    "image": "/images/service-centers/ahvaz.jpg",
+    "image": "/images/cities/khozestan.png",
     "primary": true,
     "contact": {
       "address": "اهواز، بلوار گلستان، روبه‌روی دانشگاه شهید چمران، ساختمان الماس، طبقه دوم واحد 7",
@@ -72,7 +72,7 @@
     "city": "مشهد",
     "tagline": "مرکز گسترش سرویس",
     "summary": "حضور گسترده در شرق کشور با تیم متخصص و مرکز تماس ۲۴ ساعته.",
-    "image": "/images/service-centers/mashhad.jpg",
+    "image": "/images/cities/kh_razavi.png",
     "contact": {
       "address": "مشهد، بلوار سجاد، نبش خیابان گلریز، برج سجاد، طبقه اول واحد 4",
       "hours": ["شنبه تا چهارشنبه ۹ تا ۱۷", "پنجشنبه‌ها ۹ تا ۱۳"],
@@ -93,7 +93,7 @@
     "city": "شیراز",
     "tagline": "مرکز گسترش سرویس",
     "summary": "سرویس ویژه مشتریان جنوب با تعمیرکاران مجرب و ضمانت قطعه.",
-    "image": "/images/service-centers/shiraz.jpg",
+    "image": "/images/cities/fars.png",
     "contact": {
       "address": "شیراز، خیابان ملاصدرا، ابتدای خیابان معدل، مجتمع کسری، طبقه چهارم واحد 403",
       "hours": ["شنبه تا چهارشنبه ۹ تا ۱۷", "پنجشنبه‌ها ۹ تا ۱۳"],
@@ -135,7 +135,7 @@
     "city": "تهران",
     "tagline": "نمایندگی تهران",
     "summary": "نمایندگی ویژه نور تهران با تمرکز بر تجهیزات شبکه و سرور.",
-    "image": "/images/service-centers/noor-tehran.jpg",
+    "image": "/images/cities/tehran.png",
     "contact": {
       "address": "تهران، بلوار کشاورز، پلاک 248 طبقه دوم",
       "hours": ["شنبه تا چهارشنبه ۹ تا ۱۶", "پنجشنبه‌ها ۹ تا ۱۲"],

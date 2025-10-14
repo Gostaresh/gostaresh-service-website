@@ -6,7 +6,7 @@
       class="header-layout grid gap-6 items-start md:items-center md:grid-cols-2 xl:grid-cols-2"
     >
       <div
-        class="header-title max-w-2xl space-y-3 text-center md:justify-self-end md:text-right md:col-span-1"
+        class="header-title max-w-2xl space-y-3 text-center md:justify-self-start md:text-right md:col-span-1"
       >
         <slot name="title">
           <h2 class="text-2xl font-bold text-slate-900 md:text-3xl">

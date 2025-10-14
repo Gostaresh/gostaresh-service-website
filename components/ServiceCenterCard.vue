@@ -21,7 +21,7 @@
       <div class="flex w-full items-start justify-between">
         <div class="flex flex-col items-start gap-1">
           <span
-            class="text-lg font-bold text-sky-50 transition-colors duration-200 group-hover:text-white"
+            class="text-lg font-bold text-sky-50 transition-colors duration-200 group-hover:text-white sr-only"
             style="text-shadow: 0 16px 36px rgba(15, 23, 42, 0.55)"
           >
             {{ center.title }}
@@ -41,7 +41,7 @@
       </div>
 
       <p
-        class="text-sm leading-relaxed text-slate-100"
+        class="text-sm leading-relaxed text-slate-100 sr-only"
         style="text-shadow: 0 10px 28px rgba(15, 23, 42, 0.5)"
       >
         {{ center.summary }}
