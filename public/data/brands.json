@@ -1,11 +1,11 @@
 [
-  { "name": "Lenovo", "logo": "/images/brands/lenovo.png" },
-  { "name": "ASUS", "logo": "/images/brands/asus.png" },
-  { "name": "HP", "logo": "/images/brands/hp.png" },
-  { "name": "Acer", "logo": "/images/brands/acer.png" },
-  { "name": "Samsung", "logo": "/images/brands/samsung.png" },
-  { "name": "LG", "logo": "/images/brands/LG.png" },
-  { "name": "Team Group", "logo": "/images/brands/teamgroup.png" },
-  { "name": "Geil", "logo": "/images/brands/geil.png" },
-  { "name": "Apple", "logo": "/images/brands/apple.png" }
+  { "name": "Lenovo", "slug": "lenovo", "logo": "/images/brands/lenovo.png", "summary": "لپ‌تاپ و تجهیزات کامپیوتری", "tags": ["Yoga", "ThinkPad"] },
+  { "name": "ASUS", "slug": "asus", "logo": "/images/brands/asus.png", "summary": "گیمینگ، قطعات و لپ‌تاپ", "tags": ["ROG", "TUF"] },
+  { "name": "HP", "slug": "hp", "logo": "/images/brands/hp.png" },
+  { "name": "Acer", "slug": "acer", "logo": "/images/brands/acer.png" },
+  { "name": "Samsung", "slug": "samsung", "logo": "/images/brands/samsung.png" },
+  { "name": "LG", "slug": "lg", "logo": "/images/brands/LG.png" },
+  { "name": "Team Group", "slug": "team-group", "logo": "/images/brands/teamgroup.png" },
+  { "name": "Geil", "slug": "geil", "logo": "/images/brands/geil.png" },
+  { "name": "Apple", "slug": "apple", "logo": "/images/brands/apple.png", "summary": "اکوسیستم iPhone و Mac", "tags": ["iOS", "Mac"] }
 ]

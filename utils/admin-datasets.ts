@@ -9,6 +9,19 @@ export type AdminDataset = {
 
 export const adminDatasets: AdminDataset[] = [
   {
+    key: "products",
+    title: "محصولات",
+    file: "/data/products.json",
+    type: "array",
+    columns: ["title", "brandSlug", "parentCategory", "childCategory", "priceToman"],
+  },
+  {
+    key: "categories",
+    title: "دسته‌بندی‌ها",
+    file: "/data/categories.json",
+    type: "object",
+  },
+  {
     key: "hero-slides",
     title: "اسلایدهای هدر",
     file: "/data/hero-slides.json",
@@ -91,8 +104,19 @@ export const adminDatasets: AdminDataset[] = [
     file: "/data/warranty-mock.json",
     type: "object",
   },
+  {
+    key: "rbac-roles",
+    title: "دسترسی RBAC",
+    file: "/data/rbac-roles.json",
+    type: "object",
+  },
+  {
+    key: "abac-rules",
+    title: "قوانین ABAC",
+    file: "/data/abac-rules.json",
+    type: "object",
+  },
 ];
 
 export const findDataset = (key: string) =>
   adminDatasets.find((d) => d.key === key);
-

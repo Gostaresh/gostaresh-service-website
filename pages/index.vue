@@ -185,6 +185,8 @@
     </section>
 
     <!-- آموزش -->
+    <!-- Featured Products -->
+    <HomeFeaturedProducts />
     <section class="bg-slate-50/70 py-10">
       <HomeBlogHighlights :posts="hotBlogs" />
     </section>
@@ -198,6 +200,7 @@ import HomeServiceShowcase from "@/components/HomeServiceShowcase.vue";
 import HomeBlogHighlights from "@/components/HomeBlogHighlights.vue";
 import StatsStrip from "@/components/StatsStrip.vue";
 import HomeServiceCenters from "@/components/HomeServiceCenters.vue";
+import HomeFeaturedProducts from "@/components/HomeFeaturedProducts.vue";
 import type { BlogPost } from "@/types/blog";
 
 type ActionCard = {

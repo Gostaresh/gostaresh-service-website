@@ -135,6 +135,17 @@ const navLinks: NavLink[] = [
   { to: "/about", label: "درباره ما" },
 ];
 
+// inject catalog links without touching original labels
+try {
+  // place after home link
+  (navLinks as NavLink[]).splice(
+    1,
+    0,
+    { to: "/products", label: "محصولات" },
+    { to: "/categories", label: "دسته‌ها" }
+  );
+} catch {}
+
 const route = useRoute();
 const { y } = useWindowScroll();
 
@@ -172,4 +183,3 @@ const mobileLinkClass = (path: string) =>
       : "text-slate-700 hover:bg-slate-100",
   ].join(" ");
 </script>
-
