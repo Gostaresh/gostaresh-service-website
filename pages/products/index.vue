@@ -1,19 +1,68 @@
 <template>
   <section class="container mx-auto px-4 py-8" dir="rtl">
-    <div class="mb-5 flex flex-wrap items-center gap-2">
-      <n-input v-model:value="q" placeholder="جستجوی نام/تگ/ویژگی..." class="w-64" clearable size="large">
-        <template #prefix><Icon name="ph:magnifying-glass-duotone" /></template>
-      </n-input>
-      <n-select v-model:value="brand" :options="brandOptions" placeholder="برند" clearable size="large" />
-      <n-select v-model:value="parent" :options="parentOptions" placeholder="دسته مادر" clearable size="large" />
-      <n-select v-model:value="child" :options="childOptions" placeholder="دسته فرزند" clearable size="large" :disabled="!parent" />
-    </div>
+    <div class="grid gap-6 lg:grid-cols-[280px_1fr]">
+      <!-- Sidebar Filters -->
+      <aside class="lg:sticky lg:top-24 h-fit">
+        <div class="rounded-2xl bg-white p-4 ring-1 ring-slate-200 shadow-sm">
+          <div class="mb-3 flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-slate-700">جستجو و فیلتر</h3>
+            <button
+              type="button"
+              class="text-xs text-sky-600 hover:text-sky-700"
+              @click="clearFilters"
+            >
+              پاک‌سازی
+            </button>
+          </div>
+          <div class="space-y-3">
+            <n-input
+              v-model:value="q"
+              placeholder="جستجوی نام/تگ/ویژگی..."
+              clearable
+              size="large"
+            >
+              <template #prefix>
+                <Icon name="ph:magnifying-glass-duotone" />
+              </template>
+            </n-input>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <ProductCard v-for="p in filtered" :key="p.id" :product="p" />
-    </div>
+            <n-select
+              v-model:value="brand"
+              :options="brandOptions"
+              placeholder="برند"
+              clearable
+              size="large"
+            />
 
-    <div v-if="!filtered.length" class="text-slate-500">محصولی یافت نشد.</div>
+            <n-select
+              v-model:value="parent"
+              :options="parentOptions"
+              placeholder="دسته اصلی"
+              clearable
+              size="large"
+            />
+
+            <n-select
+              v-model:value="child"
+              :options="childOptions"
+              placeholder="زیر دسته"
+              clearable
+              size="large"
+              :disabled="!parent"
+            />
+          </div>
+        </div>
+      </aside>
+
+      <!-- Products Grid -->
+      <main>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ProductCard v-for="p in filtered" :key="p.id" :product="p" />
+        </div>
+
+        <div v-if="!filtered.length" class="mt-6 text-slate-500">محصولی یافت نشد.</div>
+      </main>
+    </div>
   </section>
 </template>
 
@@ -74,6 +123,11 @@ const filtered = computed(() => {
     return matchesQ && matchesB && matchesP && matchesC
   })
 })
+
+const clearFilters = () => {
+  q.value = ''
+  brand.value = null
+  parent.value = null
+  child.value = null
+}
 </script>
-
-
