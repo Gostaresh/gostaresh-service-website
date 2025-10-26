@@ -6,6 +6,7 @@ export type WarrantyRecord = {
   purchaseDate: string; // ISO (YYYY-MM-DD)
   expireDate: string; // ISO
   warranty: { value: number; unit: "month" | "day" };
+  companyService: string;
   serviceCenter: string;
   status: {
     current: string;
@@ -55,16 +56,23 @@ export async function findWarrantyBySerial(
       startDate: string; // ISO
       endDate: string; // ISO
       trackingSerial?: string;
-      warrantySerialName?: string; // e.g. company/center name
+      warrantySerialName?: string; // e.g. center name
+      companyService?: string;
       warrantyName?: string; // e.g. brand/provider name
     };
 
     // Resolve base URL from runtime config if provided, else localhost:3100
-    const { public: pub } = (typeof useRuntimeConfig === 'function' ? useRuntimeConfig() : { public: {} } as any);
-    const base: string = (pub as any).warrantyApiBase || "http://localhost:3100";
+    const { public: pub } =
+      typeof useRuntimeConfig === "function"
+        ? useRuntimeConfig()
+        : ({ public: {} } as any);
+    const base: string =
+      (pub as any).warrantyApiBase || "http://localhost:3100";
 
     const remote = await $fetch<RemoteItem[]>(
-      `${base.replace(/\/$/, "")}/api/v1/warranty/inquiry/${encodeURIComponent(key)}`
+      `${base.replace(/\/$/, "")}/api/v1/warranty/inquiry/${encodeURIComponent(
+        key
+      )}`
     );
 
     if (Array.isArray(remote) && remote.length > 0) {
@@ -80,7 +88,8 @@ export async function findWarrantyBySerial(
         purchaseDate: r.startDate,
         expireDate: r.endDate,
         warranty: { value: r.duration ?? 0, unit: "month" },
-        serviceCenter: r.warrantySerialName || r.warrantyName || "",
+        companyService: r.warrantySerialName || "",
+        serviceCenter: r.warrantyName || "",
         status: {
           current: "registered",
           history: [

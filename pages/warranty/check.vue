@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-6" dir="rtl">
     <h1 class="text-xl font-bold">استعلام وضعیت گارانتی</h1>
 
@@ -154,6 +154,7 @@
                     {{
                       result.warrantyActive ? "گارانتی فعال" : "گارانتی منقضی"
                     }}
+                    {{ result.serviceCenter }}
                   </p>
                   <p class="text-xs text-slate-500">
                     آخرین بروزرسانی: {{ j(result.updatedAt) }}
@@ -233,14 +234,14 @@
             <WarrantyStatusSteps :status="result.status" />
           </div> -->
 
-          <n-alert
+          <!-- <n-alert
             v-if="result.note"
             type="warning"
             :show-icon="true"
             class="rounded-xl border-none !bg-amber-50 text-amber-700"
           >
             {{ result.note }}
-          </n-alert>
+          </n-alert> -->
 
           <div
             class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200/70 bg-white px-4 py-3 text-sm text-slate-600"
@@ -355,6 +356,9 @@ type PageResult = {
   serial: string;
   brand: string;
   model: string;
+  warrantySerial?: string;
+  trackingSerial?: string;
+  durationMonths?: number;
   purchaseDate: Date;
   expireDate: Date;
   warrantyActive: boolean;
@@ -452,9 +456,13 @@ const submit = async () => {
     }
     const last = rec.status.history[rec.status.history.length - 1];
     result.value = {
-      serial: rec.serials[0],
+      serial: rec.serials?.[0] || "",
       brand: rec.brand,
       model: rec.model,
+      warrantySerial: rec.serials?.[1] || "",
+      trackingSerial: rec.serials?.[2] || "",
+      durationMonths:
+        rec.warranty?.unit === "month" ? rec.warranty.value : undefined,
       purchaseDate: new Date(rec.purchaseDate),
       expireDate: new Date(rec.expireDate),
       warrantyActive: new Date(rec.expireDate).getTime() > Date.now(),
@@ -526,32 +534,43 @@ const detailCards = computed(() => {
     : "text-emerald-600";
 
   return [
-    { label: "برند", value: r.brand || "—", icon: "ph:factory-duotone" },
     {
       label: "نام محصول",
       value: r.model || "—",
       icon: "ph:device-mobile-duotone",
     },
-    { label: "سریال", value: r.serial, icon: "ph:barcode-duotone", mono: true },
+    {
+      label: "سریال دستگاه",
+      value: r.serial || "—",
+      icon: "ph:barcode-duotone",
+      mono: true,
+    },
+    {
+      label: "سریال گارانتی",
+      value: r.warrantySerial || "—",
+      icon: "ph:identification-badge-duotone",
+      mono: true,
+    },
+    {
+      label: "سریال رهگیری",
+      value: r.trackingSerial || "—",
+      icon: "ph:qrcode-duotone",
+      mono: true,
+    },
+    {
+      label: "تاریخ شروع",
+      value: j(r.purchaseDate),
+      icon: "ph:calendar-check-duotone",
+    },
     {
       label: "پایان گارانتی",
       value: j(r.expireDate),
       icon: "ph:calendar-dots-duotone",
     },
-    {
-      label: "تاریخ شروع گارانتی",
-      value: j(r.purchaseDate),
-      icon: "ph:calendar-check-duotone",
-    },
-    {
-      label: "روز باقیمانده",
-      value: toFa(Math.max(days, 0)),
-      icon: "ph:hourglass-duotone",
-      tone: daysTone,
-      suffix: "روز",
-    },
   ];
 });
+
+// removed apiCards; using detailCards only
 
 /* اکشن‌ها */
 const printPage = () => window.print();
