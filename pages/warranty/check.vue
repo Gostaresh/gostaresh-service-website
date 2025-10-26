@@ -30,7 +30,6 @@
                   v-model:value="form.serial"
                   size="large"
                   clearable
-                  maxlength="40"
                   placeholder="مثلاً: SN1234567890"
                   @update:value="onSerialInput"
                   @keydown.enter.prevent="submit"
@@ -49,7 +48,7 @@
           </div>
 
           <!-- موبایل -->
-          <div class="w-full md:w-[32%]">
+          <div v-if="false" class="w-full md:w-[32%]">
             <n-form-item label="موبایل (اختیاری)" path="phone" class="mb-0">
               <div class="ltr">
                 <n-input
@@ -111,7 +110,9 @@
       :bordered="false"
     >
       <template #header>
-        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div
+          class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+        >
           <div class="flex items-center gap-3">
             <span class="text-base font-semibold">نتیجه استعلام</span>
             <n-tag :type="result.warrantyActive ? 'success' : 'error'">
@@ -120,7 +121,9 @@
           </div>
           <div class="flex items-center gap-2 text-xs text-slate-400">
             <Icon name="ph:fingerprint-duotone" class="text-base" />
-            <span class="ltr font-mono text-sm text-slate-500">{{ result.serial }}</span>
+            <span class="ltr font-mono text-sm text-slate-500">{{
+              result.serial
+            }}</span>
           </div>
         </div>
       </template>
@@ -130,7 +133,7 @@
           <section
             :class="[
               'rounded-2xl p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] transition-colors',
-              statusVisual.container
+              statusVisual.container,
             ]"
           >
             <div
@@ -140,7 +143,7 @@
                 <div
                   :class="[
                     'grid h-12 w-12 place-items-center rounded-full text-2xl',
-                    statusVisual.iconWrapper
+                    statusVisual.iconWrapper,
                   ]"
                 >
                   <Icon :name="statusVisual.icon" />
@@ -148,7 +151,9 @@
                 <div class="space-y-1">
                   <p class="text-sm text-slate-600/80">وضعیت کنونی</p>
                   <p class="text-xl font-semibold">
-                    {{ result.warrantyActive ? "گارانتی فعال" : "گارانتی منقضی" }}
+                    {{
+                      result.warrantyActive ? "گارانتی فعال" : "گارانتی منقضی"
+                    }}
                   </p>
                   <p class="text-xs text-slate-500">
                     آخرین بروزرسانی: {{ j(result.updatedAt) }}
@@ -191,7 +196,7 @@
                   :class="[
                     'text-sm font-semibold text-slate-700',
                     item.tone,
-                    item.mono ? 'ltr font-mono text-base' : ''
+                    item.mono ? 'ltr font-mono text-base' : '',
                   ]"
                 >
                   {{ item.value }}
@@ -223,10 +228,10 @@
             />
           </div>
 
-          <div class="space-y-4">
+          <!-- <div class="space-y-4">
             <n-divider>روند رسیدگی</n-divider>
             <WarrantyStatusSteps :status="result.status" />
-          </div>
+          </div> -->
 
           <n-alert
             v-if="result.note"
@@ -270,6 +275,7 @@
             کپی لینک پیگیری
           </n-button>
           <n-button
+            v-if="false"
             quaternary
             :disabled="!form.phone"
             @click="enableSms"
@@ -383,16 +389,12 @@ const loading = ref(false);
 const hasSearched = ref(false);
 const form = reactive({ serial: "", phone: "" });
 
-const normalizeSerial = (v: string, opt: { keepDashes?: boolean } = {}) => {
+const normalizeSerial = (v: string) => {
   const en = toEn(v || "");
-  const cleaned = en.replace(
-    opt.keepDashes ? /[^A-Za-z0-9-]/g : /[^A-Za-z0-9]/g,
-    ""
-  );
-  return cleaned.toUpperCase().slice(0, 40);
+  return en.toUpperCase();
 };
 const onSerialInput = (val: string) => {
-  form.serial = normalizeSerial(val, { keepDashes: true });
+  form.serial = normalizeSerial(val);
 };
 const onPhoneInput = (val: string) => {
   form.phone = toEn(val).replace(/[^\d]/g, "").slice(0, 11);
@@ -420,6 +422,15 @@ const rules = {
       trigger: ["input", "blur"],
     },
   ],
+};
+
+// Enforce Latin-only characters and no min-length
+(rules as any).serial[0].validator = (_: any, v: string) => {
+  const s = normalizeSerial(v);
+  if (!s) return new Error("Serial is required");
+  if (!/^[\x00-\x7F]*$/.test(s))
+    return new Error("Only Latin characters allowed");
+  return true;
 };
 
 /* نتیجه */
@@ -516,17 +527,21 @@ const detailCards = computed(() => {
 
   return [
     { label: "برند", value: r.brand || "—", icon: "ph:factory-duotone" },
-    { label: "مدل", value: r.model || "—", icon: "ph:device-mobile-duotone" },
-    { label: "سریال", value: r.serial, icon: "ph:barcode-duotone", mono: true },
     {
-      label: "تاریخ خرید",
-      value: j(r.purchaseDate),
-      icon: "ph:calendar-check-duotone",
+      label: "نام محصول",
+      value: r.model || "—",
+      icon: "ph:device-mobile-duotone",
     },
+    { label: "سریال", value: r.serial, icon: "ph:barcode-duotone", mono: true },
     {
       label: "پایان گارانتی",
       value: j(r.expireDate),
       icon: "ph:calendar-dots-duotone",
+    },
+    {
+      label: "تاریخ شروع گارانتی",
+      value: j(r.purchaseDate),
+      icon: "ph:calendar-check-duotone",
     },
     {
       label: "روز باقیمانده",

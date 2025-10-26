@@ -43,8 +43,63 @@ export async function loadDB(): Promise<WarrantyDB> {
 export async function findWarrantyBySerial(
   serial: string
 ): Promise<WarrantyRecord | null> {
-  const db = await loadDB();
   const key = normSerial(serial);
+
+  // Try backend API first
+  try {
+    type RemoteItem = {
+      warrantySerial: string;
+      productName: string;
+      productSerial: string;
+      duration: number;
+      startDate: string; // ISO
+      endDate: string; // ISO
+      trackingSerial?: string;
+      warrantySerialName?: string; // e.g. company/center name
+      warrantyName?: string; // e.g. brand/provider name
+    };
+
+    // Resolve base URL from runtime config if provided, else localhost:3100
+    const { public: pub } = (typeof useRuntimeConfig === 'function' ? useRuntimeConfig() : { public: {} } as any);
+    const base: string = (pub as any).warrantyApiBase || "http://localhost:3100";
+
+    const remote = await $fetch<RemoteItem[]>(
+      `${base.replace(/\/$/, "")}/api/v1/warranty/inquiry/${encodeURIComponent(key)}`
+    );
+
+    if (Array.isArray(remote) && remote.length > 0) {
+      const r = remote[0];
+      const serials = [r.productSerial, r.warrantySerial, r.trackingSerial]
+        .filter((x): x is string => Boolean(x))
+        .map(normSerial);
+
+      const mapped: WarrantyRecord = {
+        serials,
+        brand: "",
+        model: r.productName || "",
+        purchaseDate: r.startDate,
+        expireDate: r.endDate,
+        warranty: { value: r.duration ?? 0, unit: "month" },
+        serviceCenter: r.warrantySerialName || r.warrantyName || "",
+        status: {
+          current: "registered",
+          history: [
+            r.startDate
+              ? { key: "registered", at: r.startDate, note: "شروع گارانتی" }
+              : undefined,
+          ].filter(Boolean) as { key: string; at: string; note?: string }[],
+        },
+        policyRef: undefined,
+      };
+
+      return mapped;
+    }
+  } catch {
+    // ignore and fall back to local mock DB
+  }
+
+  // Fallback: search local mock DB
+  const db = await loadDB();
   return (
     db.records.find((r) => r.serials.some((s) => normSerial(s) === key)) || null
   );
