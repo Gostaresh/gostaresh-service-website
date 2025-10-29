@@ -16,6 +16,7 @@ const blogRoutes: string[] = (() => {
 })();
 
 export default defineNuxtConfig({
+  runtimeConfig: { public: { apiBase: 'http://localhost:3100/api/v1', apiOrigin: 'http://localhost:3100' } },
   devtools: { enabled: true },
   ssr: true,
 
@@ -30,8 +31,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: "fa" },
-      titleTemplate: (t) =>
-        t ? `${t} | ع¯ط³طھط±ط´ ط³ط±ظˆغŒط³` : "ع¯ط³طھط±ط´ ط³ط±ظˆغŒط³ â€” ع¯ط³طھط±ط´ ط³غŒط³طھظ… ط§غŒط±ط§ظ†",
+      titleTemplate: (t) => (t ? `${t} | گسترش سرویس` : "گسترش سرویس — گسترش سیستم ایران"),
       link: [{ rel: "icon", href: "/brand/favicon.ico" }],
     },
   },

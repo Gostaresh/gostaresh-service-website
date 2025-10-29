@@ -1,8 +1,14 @@
 <template>
   <div class="min-h-screen bg-slate-50" dir="rtl">
+    <!-- Top bar (mobile) -->
     <header class="sticky top-0 z-40 bg-white/90 backdrop-blur ring-1 ring-slate-200/80 shadow-sm md:hidden">
       <div class="container mx-auto px-4 h-14 flex items-center justify-between">
-        <button type="button" class="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-100" @click="open = !open" aria-label="باز کردن منو">
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-100"
+          @click="open = !open"
+          aria-label="باز کردن منو"
+        >
           <Icon name="ph:list-duotone" size="22" />
           <span class="text-sm">منو</span>
         </button>
@@ -11,14 +17,19 @@
     </header>
 
     <div class="mx-auto grid w-full max-w-[1400px] grid-cols-1 md:grid-cols-[260px,1fr] gap-0">
-      <aside :class="['md:sticky md:top-0 md:h-[100dvh] md:block bg-white ring-1 ring-slate-200/80 shadow-sm', open ? 'block' : 'hidden']">
+      <!-- Sidebar -->
+      <aside
+        :class="[
+          'md:sticky md:top-0 md:h-[100dvh] md:block bg-white ring-1 ring-slate-200/80 shadow-sm',
+          open ? 'block' : 'hidden',
+        ]"
+      >
         <div class="flex h-14 items-center justify-between px-4">
           <NuxtLink to="/admin" class="text-sky-600 font-semibold">پنل ادمین</NuxtLink>
           <button class="md:hidden p-2 rounded-lg hover:bg-slate-100" @click="open = false" aria-label="بستن">
             <Icon name="ph:x-duotone" size="18" />
           </button>
         </div>
-
         <div class="px-3 pb-3 space-y-4">
           <div>
             <div class="px-3 py-2 text-xs text-slate-400">مدیریت</div>
@@ -26,39 +37,42 @@
               <NuxtLink to="/admin" class="nav-item" :class="isActive('/') ? 'is-active' : ''">
                 <Icon name="ph:gauge-duotone" /> داشبورد
               </NuxtLink>
-              <NuxtLink v-if="hasPerm('brand.read')" to="/admin/brands" class="nav-item" :class="route.path.startsWith('/admin/brands') ? 'is-active' : ''">
+              <NuxtLink to="/admin/brands" class="nav-item" :class="route.path.startsWith('/admin/brands') ? 'is-active' : ''">
                 <Icon name="ph:tag-duotone" /> برندها
               </NuxtLink>
-              <NuxtLink v-if="hasPerm('category.read')" to="/admin/categories" class="nav-item" :class="route.path.startsWith('/admin/categories') ? 'is-active' : ''">
+              <NuxtLink to="/admin/categories" class="nav-item" :class="route.path.startsWith('/admin/categories') ? 'is-active' : ''">
                 <Icon name="ph:folders-duotone" /> دسته‌بندی‌ها
               </NuxtLink>
-              <NuxtLink v-if="hasPerm('product.read')" to="/admin/products" class="nav-item" :class="route.path.startsWith('/admin/products') ? 'is-active' : ''">
+              <NuxtLink to="/admin/products" class="nav-item" :class="route.path.startsWith('/admin/products') ? 'is-active' : ''">
                 <Icon name="ph:package-duotone" /> محصولات
               </NuxtLink>
-              <NuxtLink v-if="hasPerm('article.read')" to="/admin/articles" class="nav-item" :class="route.path.startsWith('/admin/articles') ? 'is-active' : ''">
+              <NuxtLink to="/admin/articles" class="nav-item" :class="route.path.startsWith('/admin/articles') ? 'is-active' : ''">
                 <Icon name="ph:newspaper-duotone" /> مقالات
               </NuxtLink>
-              <NuxtLink v-if="hasPerm('user.read')" to="/admin/users" class="nav-item" :class="route.path.startsWith('/admin/users') ? 'is-active' : ''">
+              <NuxtLink to="/admin/users" class="nav-item" :class="route.path.startsWith('/admin/users') ? 'is-active' : ''">
                 <Icon name="ph:users-duotone" /> کاربران
               </NuxtLink>
-              <NuxtLink v-if="hasPerm('website_setting.read')" to="/admin/website-settings" class="nav-item" :class="route.path.startsWith('/admin/website-settings') ? 'is-active' : ''">
+              <NuxtLink to="/admin/website-settings" class="nav-item" :class="route.path.startsWith('/admin/website-settings') ? 'is-active' : ''">
                 <Icon name="ph:gear-duotone" /> تنظیمات سایت
               </NuxtLink>
-              <NuxtLink v-if="hasPerm('website_setting_kind.read')" to="/admin/website-setting-kinds" class="nav-item" :class="route.path.startsWith('/admin/website-setting-kinds') ? 'is-active' : ''">
+              <NuxtLink to="/admin/website-setting-kinds" class="nav-item" :class="route.path.startsWith('/admin/website-setting-kinds') ? 'is-active' : ''">
                 <Icon name="ph:sliders-duotone" /> نوع تنظیمات سایت
               </NuxtLink>
-              <NuxtLink v-if="hasPerm('role.read')" to="/admin/roles" class="nav-item" :class="route.path.startsWith('/admin/roles') ? 'is-active' : ''">
+              <NuxtLink to="/admin/roles" class="nav-item" :class="route.path.startsWith('/admin/roles') ? 'is-active' : ''">
                 <Icon name="ph:lock-duotone" /> نقش‌ها
               </NuxtLink>
-              <NuxtLink v-if="hasPerm('permission.read')" to="/admin/permissions" class="nav-item" :class="route.path.startsWith('/admin/permissions') ? 'is-active' : ''">
+              <NuxtLink to="/admin/permissions" class="nav-item" :class="route.path.startsWith('/admin/permissions') ? 'is-active' : ''">
                 <Icon name="ph:key-duotone" /> مجوزها
               </NuxtLink>
             </nav>
           </div>
+
+          
         </div>
         <div class="mt-auto hidden md:block p-3 text-[11px] text-slate-400">Nuxt 4</div>
       </aside>
 
+      <!-- Content -->
       <main class="min-h-[calc(100dvh-56px)] md:min-h-screen">
         <slot />
       </main>
@@ -69,11 +83,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useAccess } from '@/composables/useAccess'
 
 const open = ref(false)
 const route = useRoute()
-const { hasPerm } = useAccess()
 
 const isActive = (suffix: string) => {
   return route.path === `/admin${suffix}`
@@ -81,7 +93,10 @@ const isActive = (suffix: string) => {
 </script>
 
 <style scoped>
-.nav-item { @apply flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition; }
-.nav-item.is-active { @apply bg-sky-50 text-sky-700 ring-1 ring-sky-200; }
+.nav-item {
+  @apply flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition;
+}
+.nav-item.is-active {
+  @apply bg-sky-50 text-sky-700 ring-1 ring-sky-200;
+}
 </style>
-

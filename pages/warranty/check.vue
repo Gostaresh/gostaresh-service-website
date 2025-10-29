@@ -5,7 +5,7 @@
     <!-- فرم -->
     <n-card :bordered="false" class="rounded-2xl ring-1 ring-slate-200/70">
       <n-alert type="info" :show-icon="true" class="mb-4">
-        برای نتیجه بهتر، شماره را دقیق و بدون فاصله وارد کنید. نمونه:
+        شماره را دقیق و بدون فاصله وارد کنید. نمونه:
         <n-tag
           v-for="s in sampleSerials"
           :key="s"
@@ -15,8 +15,9 @@
           :bordered="false"
           class="ltr cursor-pointer mx-1"
           @click="fillSample(s)"
-          >{{ s }}</n-tag
         >
+          {{ s }}
+        </n-tag>
       </n-alert>
 
       <n-form :model="form" :rules="rules" label-placement="top" ref="formRef">
@@ -24,7 +25,11 @@
         <div class="flex flex-col md:flex-row md:items-end gap-4">
           <!-- سریال -->
           <div class="w-full md:flex-1 md:min-w-[360px]">
-            <n-form-item label="سریال / IMEI" path="serial" class="mb-0">
+            <n-form-item
+              label="سریال کالا/گارانتی یا شماره رهگیری"
+              path="serial"
+              class="mb-0"
+            >
               <div class="ltr">
                 <n-input
                   v-model:value="form.serial"

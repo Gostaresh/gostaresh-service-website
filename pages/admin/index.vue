@@ -2,77 +2,84 @@
   <section class="container mx-auto px-4 py-8" dir="rtl">
     <div class="mb-6 flex items-center justify-between gap-3">
       <div>
-        <h1 class="text-2xl font-bold">پنل مدیریت (نمایشی)</h1>
-        <p class="text-slate-500 text-sm mt-1">
-          این پنل فقط برای مشاهده داده‌هاست. ذخیره‌سازی غیرفعال است و بعداً به بک‌اند متصل می‌شود.
-        </p>
+        <h1 class="text-2xl font-bold">داشبورد ادمین</h1>
+        <p class="text-slate-500 text-sm mt-1">نمای کلی از داده‌های سیستم</p>
       </div>
-      <n-tag type="warning" round class="bg-amber-400/10 text-amber-700">Read-Only</n-tag>
+      <n-tag :type="apiHealthy ? 'success' : 'error'" round>
+        {{ apiHealthy ? 'API Online' : 'API Offline' }}
+      </n-tag>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <n-card
-        v-for="d in datasets"
-        :key="d.key"
-        :title="d.title"
-        size="small"
-        class="rounded-2xl ring-1 ring-slate-200/80 shadow-sm"
-      >
-        <template #default>
-          <div class="space-y-2">
-            <p v-if="d.description" class="text-xs text-slate-500">{{ d.description }}</p>
-            <div class="text-sm text-slate-600">
-              <template v-if="loading[d.key]">
-                <n-skeleton text :repeat="1" style="width: 60%" />
-              </template>
-              <template v-else>
-                <span v-if="d.type === 'array'">تعداد آیتم‌ها: <b>{{ counts[d.key] ?? 0 }}</b></span>
-                <span v-else>نوع: آبجکت</span>
-              </template>
-            </div>
-            <div class="pt-1">
-              <NuxtLink
-                :to="{ path: `/admin/${d.key}` }"
-                class="inline-flex items-center gap-2 rounded-xl border border-sky-500 text-sky-600 px-3 py-1.5 text-xs hover:bg-sky-50 transition"
-              >
-                مشاهده
-                <Icon name="ph:arrow-left" />
-              </NuxtLink>
-            </div>
+      <n-card v-for="card in cards" :key="card.key" size="small" class="rounded-2xl ring-1 ring-slate-200/80 shadow-sm">
+        <template #header>
+          <div class="flex items-center justify-between">
+            <div class="text-slate-700 font-medium">{{ card.title }}</div>
+            <NuxtLink :to="card.to" class="text-xs text-sky-600 hover:underline">مدیریت</NuxtLink>
           </div>
         </template>
+        <div class="text-3xl font-bold text-slate-800">
+          <template v-if="loading[card.key]"><n-skeleton text style="width: 60%" /></template>
+          <template v-else>{{ counts[card.key] ?? 0 }}</template>
+        </div>
       </n-card>
     </div>
   </section>
-  
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { NCard, NSkeleton, NTag } from 'naive-ui'
-import { adminDatasets } from '@/utils/admin-datasets'
+import { apiGet } from '@/utils/api'
 
-definePageMeta({ layout: 'admin' })
+definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
 
-const datasets = adminDatasets
 const counts = reactive<Record<string, number>>({})
 const loading = reactive<Record<string, boolean>>({})
+const apiHealthy = ref<boolean>(true)
+
+const cards = [
+  { key: 'products', title: 'محصولات', to: '/admin/products' },
+  { key: 'brands', title: 'برندها', to: '/admin/brands' },
+  { key: 'categories', title: 'دسته‌بندی‌ها', to: '/admin/categories' },
+  { key: 'articles', title: 'مقالات', to: '/admin/articles' },
+  { key: 'users', title: 'کاربران', to: '/admin/users' },
+  { key: 'website-settings', title: 'تنظیمات سایت', to: '/admin/website-settings' },
+]
 
 onMounted(async () => {
-  await Promise.all(
-    datasets.map(async (d) => {
-      loading[d.key] = true
-      try {
-        const data = await $fetch(d.file)
-        if (d.type === 'array' && Array.isArray(data)) {
-          counts[d.key] = data.length
-        }
-      } catch {
-        // ignore in demo
-      } finally {
-        loading[d.key] = false
-      }
-    })
-  )
+  apiHealthy.value = await ping()
+  await Promise.all(cards.map((c) => fetchCount(c.key)))
 })
+
+async function ping(): Promise<boolean> {
+  try {
+    await apiGet('/product-statuses')
+    return true
+  } catch {
+    return false
+  }
+}
+
+async function fetchCount(key: string) {
+  loading[key] = true
+  try {
+    const url =
+      key === 'website-settings'
+        ? '/website-settings'
+        : key === 'users'
+        ? '/users'
+        : key === 'articles'
+        ? '/articles'
+        : `/${key}`
+    const data: any = await apiGet(url, { params: { limit: 1, offset: 0 } })
+    const total = typeof data?.total === 'number' ? data.total : Array.isArray(data?.items) ? data.items.length : 0
+    counts[key] = total
+  } catch {
+    counts[key] = 0
+  } finally {
+    loading[key] = false
+  }
+}
 </script>
+
