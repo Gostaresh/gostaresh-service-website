@@ -1,46 +1,22 @@
-import { computed } from 'vue'
+import { useAuthStore } from '~/stores/auth'
 
 type LoginPayload = { userName: string; password: string }
-type LoginResponse = { token?: string; user?: Record<string, unknown> }
 
 export function useAuth() {
-  const token = useCookie<string | null>('auth_token', { sameSite: 'lax', maxAge: 60 * 60 * 24 * 7 })
-  const user = useCookie<Record<string, unknown> | null>('auth_user', { sameSite: 'lax', maxAge: 60 * 60 * 24 * 7 })
-
-  const isLoggedIn = computed(() => Boolean(token.value))
+  const store = useAuthStore()
 
   async function login(payload: LoginPayload): Promise<void> {
-    const { public: pub } = typeof useRuntimeConfig === 'function' ? useRuntimeConfig() : ({ public: {} } as any)
-    const apiBase: string = (pub as any)?.apiBase || '/api/v1'
-    const override = (pub as any)?.authApiLogin as string | undefined
-    const loginUrl = override || `${String(apiBase).replace(/\/$/, '')}/auth/login`
-
-    const res = await $fetch<LoginResponse>(loginUrl, { method: 'POST', body: { userName: payload.userName, password: payload.password } })
-    if (!res?.token) throw new Error('ورود ناموفق بود')
-    const raw = String(res.token)
-    const clean = raw.replace(/^Bearer\s+/i, '').trim()
-    token.value = clean
-    if (process.client) { try { localStorage.setItem('auth_token', clean) } catch {} }
-    user.value = (res.user as any) || null
+    await store.login(payload)
   }
 
   async function logout(): Promise<void> {
-    try {
-      const { public: pub } = typeof useRuntimeConfig === 'function' ? useRuntimeConfig() : ({ public: {} } as any)
-      const apiBase: string = (pub as any)?.apiBase || '/api/v1'
-      const url = `${String(apiBase).replace(/\/$/, '')}/auth/logout`
-      if (token.value) {
-        await $fetch(url, { method: 'POST', headers: { Authorization: `Bearer ${token.value}` } })
-      }
-    } catch {
-      // ignore
-    } finally {
-      token.value = null
-      if (process.client) { try { localStorage.removeItem('auth_token') } catch {} }
-      user.value = null
-    }
+    await store.logout()
   }
 
-  return { token, user, isLoggedIn, login, logout }
+  return {
+    token: store.token,
+    isLoggedIn: store.isLoggedIn,
+    login,
+    logout,
+  }
 }
-

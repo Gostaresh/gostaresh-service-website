@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "pinia": "^2.1.7",
     "@css-render/vue3-ssr": "^0.15.14",
     "@lottiefiles/dotlottie-wc": "^0.8.1",
     "@nuxt/icon": "^2.0.0",
