@@ -67,7 +67,7 @@ export async function findWarrantyBySerial(
         ? useRuntimeConfig()
         : ({ public: {} } as any);
     const base: string =
-      (pub as any).warrantyApiBase || "http://localhost:3100";
+      (pub as any).warrantyApiBase || "http://192.168.1.159:3100";
 
     const remote = await $fetch<RemoteItem[]>(
       `${base.replace(/\/$/, "")}/api/v1/warranty/inquiry/${encodeURIComponent(

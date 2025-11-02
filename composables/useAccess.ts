@@ -4,17 +4,17 @@ export type AccessRole = { id: string; name: string; permissions?: Array<{ id: s
 export type AccessUser = { id: string; roles?: AccessRole[] }
 
 export function useAccess() {
-  const { user } = useAuth()
+  const { user, permissions } = useAuth()
 
   const permSet = computed<Set<string>>(() => {
+    const names = new Set<string>(Array.isArray(permissions.value) ? permissions.value.map((p) => String(p)) : [])
     const u = (user.value || {}) as AccessUser
-    const names: string[] = []
     for (const r of u.roles || []) {
       for (const p of r.permissions || []) {
-        if (p?.name) names.push(String(p.name))
+        if (p?.name) names.add(String(p.name))
       }
     }
-    return new Set(names)
+    return names
   })
 
   function hasPerm(perm: string): boolean {

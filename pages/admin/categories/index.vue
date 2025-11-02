@@ -2,7 +2,11 @@
   <section class="container mx-auto px-4 py-8" dir="rtl">
     <div class="mb-5 flex items-center justify-between gap-3">
       <h1 class="text-xl font-bold">دسته‌بندی‌ها</h1>
-      <NuxtLink to="/admin/categories/create" class="inline-flex items-center gap-2 rounded-xl bg-sky-600 text-white px-3 py-2 text-sm">
+      <NuxtLink
+        v-if="hasPerm('category.create')"
+        to="/admin/categories/create"
+        class="inline-flex items-center gap-2 rounded-xl bg-sky-600 text-white px-3 py-2 text-sm"
+      >
         <Icon name="ph:plus" /> افزودن دسته‌بندی
       </NuxtLink>
     </div>
@@ -20,13 +24,19 @@
       </div>
     </n-card>
 
-    <n-data-table :columns="columns" :data="items" :loading="pending" :bordered="false" class="rounded-2xl ring-1 ring-slate-200 overflow-hidden" />
+    <n-data-table
+      :columns="columns"
+      :data="items"
+      :loading="pending"
+      :bordered="false"
+      class="rounded-2xl ring-1 ring-slate-200 overflow-hidden"
+    />
 
     <div class="mt-4 flex items-center justify-between">
-      <div class="text-sm text-slate-600">مجموع: {{ total }}</div>
+      <div class="text-sm text-slate-600">تعداد کل: {{ total }}</div>
       <div class="flex items-center gap-2">
-        <n-button size="small" :disabled="offset===0" @click="prev">قبلی</n-button>
-        <n-button size="small" :disabled="offset+limit>=total" @click="next">بعدی</n-button>
+        <n-button size="small" :disabled="offset === 0" @click="prev">قبلی</n-button>
+        <n-button size="small" :disabled="offset + limit >= total" @click="next">بعدی</n-button>
       </div>
     </div>
   </section>
@@ -34,10 +44,17 @@
 
 <script setup lang="ts">
 import { computed, h, ref, watch } from 'vue'
-import { NButton, NCard, NDataTable, NInput, NSelect, NSwitch } from 'naive-ui'
+import { NButton, NCard, NDataTable, NInput, NSelect, NSwitch, useMessage } from 'naive-ui'
 import { apiDelete, apiGet } from '@/utils/api'
 
-definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
+definePageMeta({
+  layout: 'admin',
+  middleware: ['admin-auth', 'admin-permissions'],
+  permissions: ['category.read'],
+})
+
+const { hasPerm } = useAccess()
+const msg = useMessage()
 
 const q = ref('')
 const parentID = ref<string | null>(null)
@@ -61,8 +78,10 @@ async function fetchList() {
         offset: offset.value,
       },
     })
-    items.value = Array.isArray(data?.items) ? data.items : []
-    total.value = typeof data?.total === 'number' ? data.total : items.value.length
+    const rows = Array.isArray(data?.items) ? data.items : []
+    const filtered = parentID.value ? rows : rows.filter((row: any) => !row?.parentID)
+    items.value = filtered
+    total.value = typeof data?.total === 'number' && parentID.value ? data.total : filtered.length
   } finally {
     pending.value = false
   }
@@ -71,51 +90,109 @@ async function fetchList() {
 async function fetchParents() {
   try {
     const data: any = await apiGet('/categories', { params: { limit: 100, offset: 0 } })
-    parents.value = Array.isArray(data?.items) ? data.items : []
-  } catch {}
+    const rows = Array.isArray(data?.items) ? data.items : []
+    parents.value = rows.filter((row: any) => !row?.parentID)
+  } catch {
+    parents.value = []
+  }
 }
 
-const parentOptions = computed(() => parents.value.map((p: any) => ({ label: p.name || p.slug || p.id, value: p.id })))
+const parentOptions = computed(() =>
+  parents.value.map((p: any) => ({
+    label: p.name || p.slug || p.id,
+    value: p.id,
+  }))
+)
+
+const parentLabelMap = computed<Map<string, string>>(() => {
+  return new Map(
+    parents.value.map((p: any) => [
+      String(p.id),
+      p.name || p.slug || String(p.id),
+    ])
+  )
+})
 
 function prev() {
   offset.value = Math.max(0, offset.value - limit.value)
 }
+
 function next() {
-  if (offset.value + limit.value < total.value) offset.value += limit.value
+  if (offset.value + limit.value < total.value) {
+    offset.value += limit.value
+  }
 }
 
 watch([q, parentID, onlyActive, limit, offset], fetchList, { immediate: true })
 fetchParents()
 
 function onEdit(row: any) {
+  if (!hasPerm('category.update')) return
   navigateTo(`/admin/categories/${row.id}`)
 }
 
 async function onDelete(row: any) {
+  if (!hasPerm('category.delete')) return
   if (!confirm('حذف دسته‌بندی؟')) return
-  await apiDelete(`/categories/${row.id}`)
-  fetchList()
+  try {
+    await apiDelete(`/categories/${row.id}`)
+    msg.success('حذف شد')
+    fetchList()
+  } catch (e: any) {
+    msg.error(e?.data?.message || 'حذف انجام نشد')
+  }
 }
 
-const columns = computed(() => [
-  { title: 'نام', key: 'name' },
-  { title: 'اسلاگ', key: 'slug' },
-  { title: 'شناسه والد', key: 'parentID', render: (r: any) => r.parentID ? r.parentID : '—' },
-  { title: 'فعال', key: 'isActive', render: (r: any) => (r.isActive ? 'بله' : 'خیر') },
-  {
-    title: 'عملیات',
-    key: 'actions',
-    render(row: any) {
-      return h(
-        'div',
-        { class: 'flex items-center gap-2' },
-        [
-          h(NButton, { size: 'small', onClick: () => onEdit(row) }, { default: () => 'ویرایش' }),
-          h(NButton, { size: 'small', type: 'error', secondary: true, onClick: () => onDelete(row) }, { default: () => 'حذف' }),
-        ]
-      )
-    },
-  },
-])
-</script>
+const columns = computed(() => {
+  const canEdit = hasPerm('category.update')
+  const canDelete = hasPerm('category.delete')
 
+  const baseColumns = [
+    { title: 'نام', key: 'name' },
+    { title: 'نامک', key: 'slug' },
+    {
+      title: 'دسته والد',
+      key: 'parentID',
+      render: (row: any) => {
+        if (row?.parent?.name) return row.parent.name
+        if (row?.parentID) return parentLabelMap.value.get(String(row.parentID)) || String(row.parentID)
+        return '-'
+      },
+    },
+    { title: 'وضعیت', key: 'isActive', render: (r: any) => (r.isActive ? 'فعال' : 'غیرفعال') },
+  ]
+
+  if (canEdit || canDelete) {
+    baseColumns.push({
+      title: 'اقدامات',
+      key: 'actions',
+      render(row: any) {
+        const buttons = []
+        if (canEdit) {
+          buttons.push(
+            h(
+              NButton,
+              { size: 'small', onClick: () => onEdit(row) },
+              { default: () => 'ویرایش' }
+            )
+          )
+        }
+        if (canDelete) {
+          buttons.push(
+            h(
+              NButton,
+              { size: 'small', type: 'error', secondary: true, onClick: () => onDelete(row) },
+              { default: () => 'حذف' }
+            )
+          )
+        }
+        return buttons.length
+          ? h('div', { class: 'flex items-center gap-2' }, buttons)
+          : null
+      },
+    })
+  }
+
+  return baseColumns
+})
+</script>

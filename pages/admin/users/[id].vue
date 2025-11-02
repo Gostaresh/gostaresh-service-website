@@ -7,23 +7,36 @@
 
     <n-card class="rounded-2xl ring-1 ring-slate-200/80 shadow-sm mb-6" :bordered="false">
       <n-form :model="form" ref="formRef" label-placement="left" label-width="140">
-        <n-form-item label="نام" path="firstName"><n-input v-model:value="form.firstName" /></n-form-item>
-        <n-form-item label="نام خانوادگی" path="lastName"><n-input v-model:value="form.lastName" /></n-form-item>
-        <n-form-item label="نام کاربری" path="userName"><n-input v-model:value="form.userName" /></n-form-item>
-        <n-form-item label="ایمیل" path="email"><n-input v-model:value="form.email" /></n-form-item>
+        <n-form-item label="نام" path="firstName"><n-input v-model:value="form.firstName" :disabled="!canUpdate" /></n-form-item>
+        <n-form-item label="نام خانوادگی" path="lastName"><n-input v-model:value="form.lastName" :disabled="!canUpdate" /></n-form-item>
+        <n-form-item label="نام کاربری" path="userName"><n-input v-model:value="form.userName" :disabled="!canUpdate" /></n-form-item>
+        <n-form-item label="ایمیل" path="email"><n-input v-model:value="form.email" :disabled="!canUpdate" /></n-form-item>
         <div class="pt-2 flex items-center gap-2">
-          <n-button type="primary" :loading="saving" @click="onSubmit">ذخیره</n-button>
-          <n-button type="error" secondary :loading="deleting" @click="onDelete">حذف</n-button>
+          <n-button v-if="canUpdate" type="primary" :loading="saving" @click="onSubmit">ذخیره</n-button>
+          <n-button v-if="canDelete" type="error" secondary :loading="deleting" @click="onDelete">حذف</n-button>
         </div>
       </n-form>
     </n-card>
 
-    <n-card class="rounded-2xl ring-1 ring-slate-200/80 shadow-sm" :bordered="false">
-      <template #header>نقش‌های کاربر</template>
+    <n-card
+      v-if="canManageRoles"
+      class="rounded-2xl ring-1 ring-slate-200/80 shadow-sm"
+      :bordered="false"
+    >
+      <template #header>مدیریت نقش‌ها</template>
       <div class="space-y-3">
-        <n-select v-model:value="selectedRoleIds" :options="roleOptions" multiple filterable placeholder="نقش‌ها" />
+        <n-select
+          v-model:value="selectedRoleIds"
+          :options="roleOptions"
+          :disabled="!canAssignRoles"
+          multiple
+          filterable
+          placeholder="انتخاب نقش"
+        />
         <div>
-          <n-button type="primary" :loading="savingRoles" @click="saveRoles">ذخیره نقش‌ها</n-button>
+          <n-button type="primary" :loading="savingRoles" :disabled="!canAssignRoles" @click="saveRoles">
+            ذخیره نقش‌ها
+          </n-button>
         </div>
       </div>
     </n-card>
@@ -36,7 +49,19 @@ import { useRoute } from 'vue-router'
 import { NButton, NCard, NForm, NFormItem, NInput, NSelect, useMessage } from 'naive-ui'
 import { apiDelete, apiGet, apiPut } from '@/utils/api'
 
-definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
+definePageMeta({
+  layout: 'admin',
+  middleware: ['admin-auth', 'admin-permissions'],
+  permissions: ['user.read'],
+})
+
+const { hasPerm } = useAccess()
+
+const canUpdate = computed(() => hasPerm('user.update'))
+const canDelete = computed(() => hasPerm('user.delete'))
+const canAssignRoles = computed(() => hasPerm('user_role.update'))
+const canFetchRoles = computed(() => hasPerm('role.read'))
+const canManageRoles = computed(() => canAssignRoles.value || canFetchRoles.value)
 
 const route = useRoute()
 const id = String(route.params.id)
@@ -50,29 +75,89 @@ const roles = ref<any[]>([])
 const selectedRoleIds = ref<string[]>([])
 const savingRoles = ref(false)
 
-onMounted(async () => { await Promise.all([load(), fetchRoles(), loadUserRoles()]) })
+onMounted(async () => {
+  await load()
+  if (canFetchRoles.value) {
+    await fetchRoles()
+  }
+  if (canManageRoles.value) {
+    await loadUserRoles()
+  }
+})
 
-async function load() { try { Object.assign(form.value, await apiGet(`/users/${id}`) || {}) } catch { msg.error('خواندن کاربر ناموفق بود') } }
-async function onSubmit() { saving.value = true; try { await apiPut(`/users/${id}`, { firstName: form.value.firstName || undefined, lastName: form.value.lastName || undefined, userName: form.value.userName || undefined, email: form.value.email || undefined }); msg.success('ذخیره شد') } catch (e: any) { msg.error(e?.data?.message || 'خطا در ذخیره') } finally { saving.value = false } }
-async function onDelete() { if (!confirm('حذف کاربر؟')) return; deleting.value = true; try { await apiDelete(`/users/${id}`); msg.success('حذف شد'); navigateTo('/admin/users') } catch (e: any) { msg.error(e?.data?.message || 'خطا در حذف') } finally { deleting.value = false } }
+async function load() {
+  try {
+    Object.assign(form.value, (await apiGet(`/users/${id}`)) || {})
+  } catch {
+    msg.error('خواندن اطلاعات کاربر ناموفق بود')
+  }
+}
 
-async function fetchRoles() { try { roles.value = await apiGet('/roles') as any[] } catch { roles.value = [] } }
-const roleOptions = computed(() => roles.value.map((r: any) => ({ label: r.name || r.id, value: String(r.id) })))
+async function onSubmit() {
+  if (!canUpdate.value) return
+  saving.value = true
+  try {
+    await apiPut(`/users/${id}`, {
+      firstName: form.value.firstName || undefined,
+      lastName: form.value.lastName || undefined,
+      userName: form.value.userName || undefined,
+      email: form.value.email || undefined,
+    })
+    msg.success('ذخیره شد')
+  } catch (e: any) {
+    msg.error(e?.data?.message || 'ذخیره انجام نشد')
+  } finally {
+    saving.value = false
+  }
+}
+
+async function onDelete() {
+  if (!canDelete.value) return
+  if (!confirm('حذف کاربر؟')) return
+  deleting.value = true
+  try {
+    await apiDelete(`/users/${id}`)
+    msg.success('حذف شد')
+    navigateTo('/admin/users')
+  } catch (e: any) {
+    msg.error(e?.data?.message || 'حذف انجام نشد')
+  } finally {
+    deleting.value = false
+  }
+}
+
+async function fetchRoles() {
+  try {
+    roles.value = (await apiGet('/roles')) as any[]
+  } catch {
+    roles.value = []
+  }
+}
+
+const roleOptions = computed(() =>
+  roles.value.map((r: any) => ({ label: r.name || r.id, value: String(r.id) }))
+)
 
 async function loadUserRoles() {
   try {
     const data = (await apiGet(`/users/${id}/roles`)) as any
     const arr = Array.isArray(data) ? data : Array.isArray(data?.items) ? data.items : []
     selectedRoleIds.value = arr.map((x: any) => String(x?.id ?? x))
-  } catch { selectedRoleIds.value = [] }
+  } catch {
+    selectedRoleIds.value = []
+  }
 }
 
 async function saveRoles() {
+  if (!canAssignRoles.value) return
   savingRoles.value = true
   try {
     await apiPut(`/users/${id}/roles`, selectedRoleIds.value)
     msg.success('نقش‌ها ذخیره شد')
-  } catch (e: any) { msg.error(e?.data?.message || 'خطا در ذخیره نقش‌ها') } finally { savingRoles.value = false }
+  } catch (e: any) {
+    msg.error(e?.data?.message || 'ذخیره نقش‌ها انجام نشد')
+  } finally {
+    savingRoles.value = false
+  }
 }
 </script>
-

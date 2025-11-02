@@ -1,0 +1,112 @@
+﻿<template>
+  <section class="min-h-[70dvh] flex items-center justify-center px-4" dir="rtl">
+    <n-card class="w-full max-w-md rounded-2xl ring-1 ring-slate-200/80 shadow-sm">
+      <template #header>
+        <div class="text-center w-full">
+          <h1 class="text-lg font-bold">ظˆط±ظˆط¯ ط¨ظ‡ ط­ط³ط§ط¨</h1>
+          <p class="text-slate-500 text-xs mt-1">
+            ط¨ط±ط§غŒ ظˆط±ظˆط¯ ط¨ظ‡ ظ¾ظ†ظ„ ظ…ط¯غŒط±غŒطھطŒ ط§ط·ظ„ط§ط¹ط§طھ ط®ظˆط¯ ط±ط§ ظˆط§ط±ط¯ ع©ظ†غŒط¯.
+          </p>
+        </div>
+      </template>
+
+      <ClientOnly>
+        <form class="space-y-3" @submit.prevent="onSubmit">
+          <n-form :model="form" :disabled="loading">
+            <n-form-item label="ظ†ط§ظ… ع©ط§ط±ط¨ط±غŒ">
+              <n-input v-model:value="form.userName" placeholder="admin" size="large" />
+            </n-form-item>
+            <n-form-item label="ع©ظ„ظ…ظ‡ ط¹ط¨ظˆط±">
+              <n-input
+                v-model:value="form.password"
+                type="password"
+                show-password-on="mousedown"
+                placeholder="********"
+                size="large"
+              />
+            </n-form-item>
+          </n-form>
+
+          <n-alert v-if="error" type="error" class="text-right">{{ error }}</n-alert>
+          <n-alert v-if="meInfo" type="success" class="text-right">{{ meInfo }}</n-alert>
+
+          <div class="pt-1 flex gap-2">
+            <n-button type="primary" size="large" class="w-full flex-1" :loading="loading" attr-type="submit">
+              ظˆط±ظˆط¯
+            </n-button>
+            <n-button
+              type="default"
+              size="large"
+              class="w-full flex-1"
+              :loading="checking"
+              attr-type="button"
+              @click="checkMe"
+            >
+              ط¨ط±ط±ط³غŒ طھظˆع©ظ† (me)
+            </n-button>
+          </div>
+        </form>
+      </ClientOnly>
+
+      <template #footer>
+        <div class="text-center text-xs text-slate-500">
+          ط¨ط§ط²ع¯ط´طھ ط¨ظ‡
+          <NuxtLink to="/" class="text-sky-600 hover:underline">طµظپط­ظ‡ ط§طµظ„غŒ</NuxtLink>
+        </div>
+      </template>
+    </n-card>
+  </section>
+  </template>
+
+<script setup lang="ts">
+import { reactive, ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { NCard, NForm, NFormItem, NInput, NButton, NAlert } from 'naive-ui'
+import { useAuth } from '@/composables/useAuth'
+import { apiGet } from '@/utils/api'
+
+definePageMeta({ layout: 'default' })
+
+const router = useRouter()
+const route = useRoute()
+const redirectTo = ref<string>(typeof route.query.redirect === 'string' ? route.query.redirect : '/admin')
+
+const { isLoggedIn, login, token } = useAuth()
+const form = reactive({ userName: '', password: '' })
+const loading = ref(false)
+const checking = ref(false)
+const error = ref<string | null>(null)
+const meInfo = ref<string | null>(null)
+
+onMounted(() => {
+  if (isLoggedIn.value) router.replace(redirectTo.value || '/admin')
+})
+
+async function onSubmit() {
+  loading.value = true
+  error.value = null
+  try {
+    await login({ userName: form.userName, password: form.password })
+    router.replace(redirectTo.value || '/admin')
+  } catch (e: any) {
+    error.value = e?.data?.message || e?.message || 'ظˆط±ظˆط¯ ظ†ط§ظ…ظˆظپظ‚ ط¨ظˆط¯'
+  } finally {
+    loading.value = false
+  }
+}
+
+async function checkMe() {
+  checking.value = true
+  error.value = null
+  meInfo.value = null
+  try {
+    // Authorization header is set by fetch plugin using cookie/localStorage token
+    const data = await apiGet<any>('auth/me')
+    meInfo.value = JSON.stringify(data)
+  } catch (e: any) {
+    error.value = e?.data?.message || e?.message || 'ط¯ط±ط®ظˆط§ط³طھ me ظ†ط§ظ…ظˆظپظ‚ ط¨ظˆط¯'
+  } finally {
+    checking.value = false
+  }
+}
+</script>
